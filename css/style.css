@@ -1,0 +1,170 @@
+@import url(reset.css);
+@import url("https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap");
+/* 400 - 500 - 700s */
+
+:root {
+  --primary-50: #f6f7f7;
+  --primary-100: #dde2e3;
+  --primary-200: #c2d1d4;
+  --primary-300: #a3c0c6;
+  --primary-400: #8ab6c0;
+  --primary-500: #67aab8;
+  --primary-600: #4596a7;
+  --primary-700: #3a8b9c;
+  --primary-800: #2b7b8c; /* Primary */
+  --primary-900: #207283;
+  --primary-1000: #156171;
+  --primary-1100: #0d4e5b;
+  --primary-1200: #073943;
+  --primary-1300: #03262e;
+  --primary-1400: #011418;
+  --primary-1500: #000708;
+
+  --fs-10: 0.62rem;
+  --fs-11: 0.69rem;
+  --fs-12: 0.75rem;
+  --fs-13: 0.81rem;
+  --fs-14: 0.88rem;
+  --fs-15: 0.94rem;
+  --fs-16: 1rem;
+  --fs-20: 1.25rem;
+  --fs-24: 1.5rem;
+  --fs-32: 2rem;
+  --fs-36: 2.25rem;
+  --fs-40: 2.5rem;
+  --fs-48: 3rem;
+  --fs-64: 4rem;
+  --fs-96: 6rem;
+  --fs-128: 8rem;
+
+  --spc-4: 0.25rem;
+  --spc-8: 0.5rem;
+  --spc-12: 0.75rem;
+  --spc-16: 1rem;
+  --spc-20: 1.25rem;
+  --spc-24: 1.5rem;
+  --spc-32: 2rem;
+  --spc-36: 2.25rem;
+  --spc-40: 2.5rem;
+  --spc-48: 3rem;
+  --spc-60: 3.75rem;
+  --spc-72: 4.5rem;
+  --spc-80: 5rem;
+  --spc-120: 7.5rem;
+  --spc-160: 10rem;
+  --spc-200: 12.5rem;
+}
+
+/* --- */
+body {
+  background-color: var(--primary-150000);
+  font-family: "Fira Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+  background-image: url(../assets/noise__starDust.png);
+  background-repeat: repeat;
+  background-size: 10%;
+}
+main,
+header,
+footer {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+/* --- Defaults --- */
+h1 {
+  font-size: var(--fs-64);
+  color: var(--primary-700);
+}
+h2 {
+  color: var(--primary-1400);
+  font-size: var(--fs-64);
+  font-weight: 500;
+}
+p {
+  font-size: var(--fs-20);
+  line-height: calc(var(--fs-20) * 1.5);
+  color: var(--primary-200);
+}
+.container {
+  margin: 0 8.125rem;
+}
+/* --- Header --- */
+header > div {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spc-48) 0;
+  border-bottom: 3px solid var(--primary-1300);
+}
+nav {
+  display: flex;
+  gap: var(--fs-32);
+}
+nav a {
+  color: var(--primary-200);
+  text-decoration: none;
+}
+
+header button {
+  background: none;
+  border: none;
+  color: var(--primary-200);
+}
+
+/* --- hero --- */
+.hero {
+  padding: var(--spc-72) 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid var(--primary-1300);
+}
+.hero h1 a {
+  color: var(--primary-700);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* --- sobreMim --- */
+
+.sobreMim {
+  padding: var(--spc-72) 0;
+  display: grid;
+  grid-template-columns: 3fr 9fr;
+}
+
+/* --- experiencia --- */
+
+.experiencia {
+  background-color: var(--primary-50);
+}
+.experiencia > div {
+  padding: var(--spc-72) 0;
+  display: grid;
+  grid-template-columns: 3fr 9fr;
+}
+.experiencia h2 {
+  color: var(--primary-300);
+}
+
+.experiencia__card {
+  background-color: var(--primary-100);
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  padding: var(--spc-16);
+}
+.experiencia__card h3 {
+  color: var(--primary-1300);
+  font-weight: 700;
+  font-size: var(--fs-20);
+  line-height: var(--fs-20);
+}
+
+.experiencia__card p {
+  margin-top: var(--spc-12);
+  font-size: var(--fs-20);
+  line-height: var(--fs-20);
+  color: var(--primary-1300);
+}
