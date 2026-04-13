@@ -1,0 +1,27 @@
+{
+  "name": "alexmrtr",
+  "version": "1.0.0",
+  "description": "alexmrtr's interactive terminal business card",
+  "type": "module",
+  "bin": {
+    "alexmrtr": "./src/index.js",
+    "meu-cartao": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "keywords": ["business-card", "cli", "npx", "developer-card"],
+  "author": "alexmrtr",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "boxen": "^7.1.1",
+    "figlet": "^1.7.0",
+    "qrcode-terminal": "^0.12.0",
+    "terminal-link": "^3.0.0"
+  }
+}
