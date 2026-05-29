@@ -1,0 +1,14 @@
+<canvas id="mesh-bg" class="fixed inset-0 size-full -z-10" />
+
+<script>
+  import { createMeshBackground } from "./meshBackground.ts";
+
+  const canvas = document.getElementById("mesh-bg");
+  if (canvas instanceof HTMLCanvasElement) {
+    const cleanup = createMeshBackground(canvas);
+
+    document.addEventListener("astro:before-swap", () => {
+      if (cleanup) cleanup();
+    });
+  }
+</script>
