@@ -1,27 +1,32 @@
 {
   "name": "alexmrtr",
-  "version": "1.0.0",
-  "description": "alexmrtr's interactive terminal business card",
   "type": "module",
-  "bin": {
-    "alexmrtr": "./src/index.js",
-    "meu-cartao": "./src/index.js"
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
-  },
-  "keywords": ["business-card", "cli", "npx", "developer-card"],
-  "author": "alexmrtr",
-  "license": "MIT",
-  "engines": {
-    "node": ">=18.0.0"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "chalk": "^5.3.0",
-    "boxen": "^7.1.1",
-    "figlet": "^1.7.0",
-    "qrcode-terminal": "^0.12.0",
-    "terminal-link": "^3.0.0"
+    "@tailwindcss/vite": "^4.3.0",
+    "asciify-engine": "^1.0.118",
+    "astro": "^6.4.2",
+    "gsap": "^3.15.0",
+    "three": "^0.184.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/three": "^0.184.1",
+    "eslint": "^10.4.0",
+    "eslint-plugin-astro": "^1.7.0",
+    "tailwindcss": "^4.3.0",
+    "typescript-eslint": "^8.60.0"
   }
 }
