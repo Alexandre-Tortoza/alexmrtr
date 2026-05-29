@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mesh-1: #1ea7b6;
+  --color-mesh-2: #2e828b;
+  --color-mesh-3: #00cae1;
+  --color-mesh-4: #305c61;
+  --color-mesh-5: #243536;
+  --color-mesh-6: #2b3233;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --text-primary: #f5f5f5;
+  --text-secondary: #a0a0a0;
+  --accent: #1ea7b6;
+}
+
+.light {
+  --bg-primary: #fdfdfd;
+  --bg-secondary: #f0f0f0;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --accent: #1ea7b6;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family:
+    "JetBrains Mono",
+    "Fira Code",
+    "Cascadia Code",
+    "Consolas",
+    monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.light .mesh-bg-dots {
+  opacity: 0.3;
+}
