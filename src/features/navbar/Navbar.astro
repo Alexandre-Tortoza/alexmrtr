@@ -1,0 +1,38 @@
+<header
+  id="navbar"
+  class="fixed top-0 left-0 right-0 z-50 flex -translate-y-full justify-center p-6 lg:p-10"
+>
+  <nav class="flex w-full max-w-7xl flex-col items-center justify-between gap-4 rounded-2xl border border-white/10 bg-black/40 px-8 py-6 backdrop-blur-md transition-all duration-300 sm:flex-row sm:rounded-full sm:py-5 hover:border-white/20">
+    <a href="/" class="text-sm font-bold tracking-[0.3em] uppercase transition-colors hover:text-mesh-1">
+      alexmrtr
+    </a>
+    <div class="flex items-center gap-5 text-[10px] tracking-widest uppercase sm:gap-10 sm:text-xs">
+      <a href="/" class="navbar-link relative">
+        Início
+        <span class="navbar-line absolute -bottom-1 left-0 h-px w-full origin-center scale-x-0 bg-mesh-1" />
+      </a>
+      <a href="/projects" class="navbar-link relative">
+        Projetos
+        <span class="navbar-line absolute -bottom-1 left-0 h-px w-full origin-center scale-x-0 bg-mesh-1" />
+      </a>
+      <a href="/blog" class="navbar-link relative">
+        Blog
+        <span class="navbar-line absolute -bottom-1 left-0 h-px w-full origin-center scale-x-0 bg-mesh-1" />
+      </a>
+      <a href="/photos" class="navbar-link relative">
+        Fotos
+        <span class="navbar-line absolute -bottom-1 left-0 h-px w-full origin-center scale-x-0 bg-mesh-1" />
+      </a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  import { initNavbar } from "./navbar.ts";
+
+  const cleanup = initNavbar();
+
+  document.addEventListener("astro:before-swap", () => {
+    if (cleanup) cleanup();
+  });
+</script>
