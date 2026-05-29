@@ -1,0 +1,55 @@
+---
+interface Props {
+  src: string
+  width?: number | string
+  height?: number | string
+  class?: string
+  fontSize?: number
+  artStyle?: string
+  colorMode?: "grayscale" | "fullcolor" | "matrix" | "accent"
+  hoverEffect?: boolean
+  ditherStrength?: number
+}
+
+const { src, width = 600, height = 400, class: className } = Astro.props;
+const toCssSize = (value: number | string) =>
+  typeof value === "number" ? `${value}px` : value;
+---
+
+<canvas
+  id="ascii-art"
+  class={className}
+  style={{ width: toCssSize(width), height: toCssSize(height) }}
+  data-src={src}
+  data-font-size={Astro.props.fontSize ?? 10}
+  data-art-style={Astro.props.artStyle ?? "classic"}
+  data-color-mode={Astro.props.colorMode ?? "grayscale"}
+  data-hover={Astro.props.hoverEffect ?? false}
+  data-dither={Astro.props.ditherStrength ?? 0}
+/>
+
+<script>
+  import { createAsciiArt } from "./asciiArt.ts";
+
+  const canvas = document.getElementById("ascii-art");
+  if (canvas instanceof HTMLCanvasElement) {
+    const src = canvas.dataset.src!;
+    const config = {
+      fontSize: Number(canvas.dataset.fontSize),
+      artStyle: canvas.dataset.artStyle,
+      colorMode: canvas.dataset.colorMode as never,
+      hoverEffect: canvas.dataset.hover === "true",
+      ditherStrength: Number(canvas.dataset.dither),
+    };
+
+    let cleanup: (() => void) | undefined;
+
+    createAsciiArt(canvas, src, config).then((stop) => {
+      cleanup = stop;
+    });
+
+    document.addEventListener("astro:before-swap", () => {
+      if (cleanup) cleanup();
+    });
+  }
+</script>
