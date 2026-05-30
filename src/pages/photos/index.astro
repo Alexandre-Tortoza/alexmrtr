@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../app/layouts/BaseLayout.astro";
-import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg";
+import PhotoCard from "../../features/gallery/ui/PhotoCard.astro";
+import photos from "../../features/gallery/data/photos.json";
 ---
 
 <BaseLayout
@@ -9,7 +10,7 @@ import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg"
 >
   <div class="page-hero relative mt-20 h-[55vh] w-full overflow-hidden rounded-sm border border-white/10">
     <img
-      src={penguinsImage.src}
+      src="/gallery/penguins.jpg"
       alt="Galeria"
       class="h-full w-full object-cover"
     />
@@ -24,13 +25,18 @@ import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg"
     </div>
   </div>
 
-  <div class="mt-12 flex min-h-[300px] items-center justify-center rounded-sm border border-white/5 bg-white/[0.03]">
-    <div class="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-8 py-4 backdrop-blur-sm">
-      <span class="text-xs font-bold tracking-[0.3em] uppercase text-white/80">
-        Em construção
-      </span>
+  <section class="py-16 lg:py-24">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {photos.map((photo) => (
+        <PhotoCard
+          id={photo.id}
+          title={photo.title}
+          description={photo.description}
+          src={photo.src}
+        />
+      ))}
     </div>
-  </div>
+  </section>
 </BaseLayout>
 
 <style>

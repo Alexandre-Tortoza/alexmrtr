@@ -20,7 +20,7 @@ FSD é uma metodologia de organização de front-end que separa o código em cam
 ├─────────────────────────────┤
 │        Domain               │  entities/
 ├─────────────────────────────┤
-│     Infrastructure          │  shared/ + content/
+│     Infrastructure          │  content/
 └─────────────────────────────┘
 ```
 
@@ -30,9 +30,8 @@ Cada camada tem uma responsabilidade clara:
 
 - **App** — Configuração, layouts, estilos globais
 - **Pages** — Composição de features para formar páginas
-- **Features** — Casos de uso: listar posts, filtrar projetos
+- **Features** — Casos de uso: listar posts, abrir galeria
 - **Entities** — Tipos e regras de negócio
-- **Shared** — UI primitives, utilitários, i18n
 
 ## Regra de dependência
 

@@ -1,10 +1,8 @@
 ---
-import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg";
-
 const cards = [
-  { href: "/photos",   label: "Galeria",   desc: "Fotografia e momentos",   image: penguinsImage.src },
-  { href: "/blog",     label: "Blog",      desc: "Artigos e anotações",     image: penguinsImage.src },
-  { href: "/projects", label: "Projetos",  desc: "O que estou construindo", image: penguinsImage.src },
+  { href: "/photos",   label: "Galeria",  desc: "Fotografia e momentos"   },
+  { href: "/blog",     label: "Blog",     desc: "Artigos e anotações"     },
+  { href: "/projects", label: "Projetos", desc: "O que estou construindo" },
 ];
 ---
 
@@ -26,25 +24,25 @@ const cards = [
           draggable="false"
         >
           <div class="card-3d">
-            <img
-              src={card.image}
-              alt={card.label}
-              class="card-img pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
-              draggable="false"
-            />
+            <div class="card-content">
+              <div class="card-iframe-wrapper">
+                <iframe
+                  data-src={card.href}
+                  class="card-iframe"
+                  scrolling="no"
+                  tabindex="-1"
+                  aria-hidden="true"
+                />
+              </div>
 
-            <canvas
-              class="card-ascii pointer-events-none absolute inset-0 h-full w-full"
-              data-src={card.image}
-            />
-
-            <div class="card-overlay absolute inset-0 z-10 flex flex-col justify-end p-5 2xl:p-7">
-              <span class="mb-1 text-[10px] tracking-[0.25em] uppercase text-mesh-1 2xl:text-xs">
-                {card.label}
-              </span>
-              <p class="text-sm leading-snug text-white/50 2xl:text-base">
-                {card.desc}
-              </p>
+              <div class="card-overlay absolute inset-0 z-10 flex flex-col justify-end p-5 2xl:p-7">
+                <span class="mb-1 text-[10px] tracking-[0.25em] uppercase text-mesh-1 2xl:text-xs">
+                  {card.label}
+                </span>
+                <p class="text-sm leading-snug text-white/50 2xl:text-base">
+                  {card.desc}
+                </p>
+              </div>
             </div>
 
             <div class="card-shine pointer-events-none absolute inset-[-45%] z-20" />
@@ -180,12 +178,79 @@ const cards = [
     background-color: rgb(30 167 182);
     width: 1.25rem;
   }
+
+  /* ── Slit reveal (synced with shine) ────────────────────────────────────── */
+  @property --slit-x {
+    syntax: "<percentage>";
+    initial-value: -20%;
+    inherits: false;
+  }
+
+  .card-content {
+    position: absolute;
+    inset: 0;
+    --slit-x: -20%;
+    mask-image: linear-gradient(
+      115deg,
+      transparent calc(var(--slit-x) - 14%),
+      black       calc(var(--slit-x) -  6%),
+      black       calc(var(--slit-x) +  6%),
+      transparent calc(var(--slit-x) + 14%)
+    );
+    -webkit-mask-image: linear-gradient(
+      115deg,
+      transparent calc(var(--slit-x) - 14%),
+      black       calc(var(--slit-x) -  6%),
+      black       calc(var(--slit-x) +  6%),
+      transparent calc(var(--slit-x) + 14%)
+    );
+    animation: nav-slit-sweep 8s ease-in-out infinite;
+  }
+
+  @keyframes nav-slit-sweep {
+    0%, 45% { --slit-x: -20%; }
+    100%    { --slit-x: 120%; }
+  }
+
+  .nav-card.is-hovered .card-content {
+    animation: none;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  /* ── iframe page preview ─────────────────────────────────────────────────── */
+  .card-iframe-wrapper {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .card-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1440px;
+    height: 960px;
+    border: none;
+    transform: scale(0.25);
+    transform-origin: top left;
+    pointer-events: none;
+  }
+
+  @media (max-width: 767px) {
+    .card-iframe {
+      width: 960px;
+      height: 640px;
+      transform: scale(0.229);
+    }
+  }
 </style>
 
 <script>
   import gsap from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
-  import { createAsciiArt } from "../ascii-art/asciiArt.ts";
 
   gsap.registerPlugin(ScrollTrigger);
 
@@ -352,24 +417,21 @@ const cards = [
   // ── Navigate with zoom (clone expands to fill screen, then navigates) ──────
   function navigateWithZoom(navCard: HTMLElement, href: string) {
     const card3d = navCard.querySelector<HTMLElement>(".card-3d")!;
-    const imgSrc = navCard.querySelector<HTMLImageElement>(".card-img")?.src ?? "";
     const rect   = card3d.getBoundingClientRect();
 
     const clone = document.createElement("div");
     Object.assign(clone.style, {
-      position:           "fixed",
-      left:               rect.left   + "px",
-      top:                rect.top    + "px",
-      width:              rect.width  + "px",
-      height:             rect.height + "px",
-      zIndex:             "9999",
-      borderRadius:       "2px",
-      border:             "1px solid rgba(255,255,255,0.1)",
-      overflow:           "hidden",
-      pointerEvents:      "none",
-      backgroundImage:    `url(${imgSrc})`,
-      backgroundSize:     "cover",
-      backgroundPosition: "center",
+      position:        "fixed",
+      left:            rect.left   + "px",
+      top:             rect.top    + "px",
+      width:           rect.width  + "px",
+      height:          rect.height + "px",
+      zIndex:          "9999",
+      borderRadius:    "2px",
+      border:          "1px solid rgba(255,255,255,0.1)",
+      overflow:        "hidden",
+      pointerEvents:   "none",
+      backgroundColor: "var(--bg-primary)",
     });
     const overlay = document.createElement("div");
     overlay.style.cssText =
@@ -444,32 +506,41 @@ const cards = [
     });
   });
 
-  // ── Hover: ASCII → real image ─────────────────────────────────────────────
+  // ── Hover: slit-reveal → live iframe (isolated from card-shine) ──────────
   navCards.forEach((navCard) => {
-    const ascii = navCard.querySelector<HTMLCanvasElement>(".card-ascii");
-    const img   = navCard.querySelector<HTMLImageElement>(".card-img");
+    const content      = navCard.querySelector<HTMLElement>(".card-content")!;
+    const iframeWrapper = navCard.querySelector<HTMLElement>(".card-iframe-wrapper")!;
 
     navCard.addEventListener("pointerenter", () => {
-      gsap.to(ascii, { opacity: 0,    duration: 0.5, ease: "power2.out" });
-      gsap.to(img,   { opacity: 1,    duration: 0.5, ease: "power2.out" });
+      navCard.classList.add("is-hovered");
+      gsap.to(content,       { opacity: 1, duration: 0.5, ease: "power2.out" });
+      gsap.to(iframeWrapper, { opacity: 1, duration: 0.5, ease: "power2.out" });
     });
+
     navCard.addEventListener("pointerleave", () => {
-      gsap.to(ascii, { opacity: 0.86, duration: 0.6, ease: "power2.inOut" });
-      gsap.to(img,   { opacity: 0,    duration: 0.6, ease: "power2.inOut" });
+      gsap.to(iframeWrapper, { opacity: 0, duration: 0.5, ease: "power2.inOut" });
+      gsap.to(content, {
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.inOut",
+        onComplete: () => {
+          navCard.classList.remove("is-hovered");
+          content.style.animationDelay = `${-(Date.now() % 8000) / 1000}s`;
+          gsap.set(content, { clearProps: "opacity" });
+        },
+      });
     });
   });
 
-  // ── ASCII art ─────────────────────────────────────────────────────────────
-  const asciiCleanups: (() => void)[] = [];
-
-  document.querySelectorAll<HTMLCanvasElement>(".card-ascii").forEach((canvas) => {
-    createAsciiArt(canvas, canvas.dataset.src!, {
-      fontSize: 14,
-      artStyle: "classic",
-      colorMode: "fullcolor",
-      ditherStrength: 0,
-    }).then((stop) => asciiCleanups.push(stop));
-  });
+  // ── Lazy-load iframes for hover preview ───────────────────────────────────
+  const iframeObserver = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    iframeObserver.disconnect();
+    document.querySelectorAll<HTMLIFrameElement>(".card-iframe").forEach((iframe) => {
+      iframe.src = iframe.dataset.src!;
+    });
+  }, { threshold: 0.1 });
+  iframeObserver.observe(document.getElementById("pages-nav")!);
 
   // ── Init + ScrollTrigger entrance ────────────────────────────────────────
   initPositions();
@@ -492,8 +563,6 @@ const cards = [
 
   // ── Cleanup on page navigation ────────────────────────────────────────────
   document.addEventListener("astro:before-swap", () => {
-    asciiCleanups.forEach((fn) => fn());
-    asciiCleanups.length = 0;
     cardStates.clear();
   });
 </script>

@@ -18,13 +18,14 @@ Uma das funcionalidades mais poderosas do Astro são as **Content Collections**,
 
 ```typescript
 import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
 
 const blog = defineCollection({
-  type: "content",
+  loader: glob({ pattern: "**/[^_]*.md", base: "./src/content/blog" }),
   schema: z.object({
     title: z.string(),
     pubDate: z.date(),
-    tags: z.array(z.string()),
+    tags: z.array(z.string()).default([]),
   }),
 });
 ```

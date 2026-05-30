@@ -1,0 +1,44 @@
+[
+  {
+    "id": "penguins-1",
+    "title": "Antártida",
+    "description": "Momentos no gelo.",
+    "src": "/gallery/penguins.jpg",
+    "date": "2026-05-30"
+  },
+  {
+    "id": "penguins-2",
+    "title": "Exploração",
+    "description": "Caminhada matinal.",
+    "src": "/gallery/penguins.jpg",
+    "date": "2026-05-28"
+  },
+  {
+    "id": "penguins-3",
+    "title": "Horizonte",
+    "description": "Onde o gelo encontra o céu.",
+    "src": "/gallery/penguins.jpg",
+    "date": "2026-05-25"
+  },
+  {
+    "id": "penguins-4",
+    "title": "Comunidade",
+    "description": "Juntos no frio.",
+    "src": "/gallery/penguins.jpg",
+    "date": "2026-05-20"
+  },
+  {
+    "id": "penguins-5",
+    "title": "Pausa",
+    "description": "Descanso necessário.",
+    "src": "/gallery/penguins.jpg",
+    "date": "2026-05-15"
+  },
+  {
+    "id": "penguins-6",
+    "title": "Partida",
+    "description": "Rumo ao desconhecido.",
+    "src": "/gallery/penguins.jpg",
+    "date": "2026-05-10"
+  }
+]

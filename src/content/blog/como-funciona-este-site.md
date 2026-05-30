@@ -34,7 +34,6 @@ src/
 ├── pages/        → Rotas (cada arquivo .astro vira uma URL)
 ├── features/     → Casos de uso auto-contidos
 ├── entities/     → Tipos de domínio
-├── shared/       → UI primitives, utilitários
 └── content/      → Posts em markdown
 ```
 
@@ -73,18 +72,29 @@ As partículas ondulam com ondas senoidais e reagem ao mouse — as mais próxim
 
 Seis cores da paleta `mesh-1` a `mesh-6` (`#1EA7B6`, `#2E828B`, `#00CAE1`, `#305C61`, `#243536`, `#2B3233`) são distribuídas aleatoriamente entre os pontos.
 
-### LavaLampBackground (SVG + GSAP)
+### Stardust (Canvas 2D + GSAP)
 
-Uma segunda camada de background com blobs SVG orgânicos que se movem como lava lamp:
+Uma segunda camada de background é um **túnel de estrelas** em 3D projetado em Canvas 2D:
 
-- **Paths gerados proceduralmente** — cada blob é um polígono de 8–12 pontos com raios irregulares, suavizados com curvas bezier
-- **Radial gradient** — centro concentrado (`opacity: 0.4`) → bordas transparentes (`opacity: 0`)
-- **Filtro SVG** — `feGaussianBlur` para bordas suaves + `feTurbulence` para o efeito de ruído granulado
-- **Movimento** — GSAP anima `x`, `y`, `scale` e `rotation` com `sine.inOut` em ciclos aleatórios de 8–18 segundos
+- **600 partículas** em espaço 3D que se movem em direção ao observador
+- **Projeção perspectiva** — coordenadas 3D são projetadas em 2D com `scale = fov / z`
+- **Três cores** — `#1EA7B6` (ciano), `#FFFFFF` (branco), `#B489D1` (roxo)
+- **Streaks de movimento** — cada partícula desenha uma linha da posição anterior para a atual, criando rastros
+- **GSAP ticker** — `gsap.ticker.add(draw)` mantém o loop de animação sincronizado com o resto do site
+- **Tail effect** — `ctx.fillStyle = "rgba(10, 10, 10, 0.4)"` apaga gradualmente o frame anterior, suavizando os rastros
 
 ### BinaryStars (AboutBackground)
 
 Na seção Sobre, um canvas 2D exibe caracteres `0` e `1` que piscam como estrelas binárias — uma referência sutil ao tema de tecnologia.
+
+### Galeria (PhotoCard + ASCII preview)
+
+A página `/photos` exibe uma galeria de fotos com um mecanismo de revelação:
+
+- **Prévia em ASCII** — cada foto é inicialmente mostrada como arte ASCII gerada com `asciify-engine`
+- **Click to unlock** — ao clicar, a imagem real é revelada com transição suave
+- **Dados em JSON** — as fotos são definidas em `features/gallery/data/photos.json`
+- **Grid responsivo** — layout adaptável que funciona em mobile e desktop
 
 ---
 
@@ -169,8 +179,7 @@ O roadmap inclui:
 
 - **i18n** — suporte a múltiplos idiomas com dicionário customizado
 - **Testes** — Vitest + Testing Library para testes unitários e de componente
-- **Páginas de projetos** — galeria com card grid e filtros
-- **Galeria de fotos** — lightbox com navegação
+- **Páginas de projetos** — página de listagem com card grid e filtros
 - **Performance** — Lighthouse 100, Open Graph, sitemap, RSS
 
 ---

@@ -1,0 +1,76 @@
+---
+export interface Props {
+  id: string;
+  title: string;
+  description: string;
+  src: string;
+}
+
+const { id, title, description, src } = Astro.props;
+---
+
+<div class="photo-card group relative aspect-[4/3] overflow-hidden rounded-sm border border-white/10 bg-black cursor-pointer" data-id={id} data-src={src}>
+  {/* ASCII Layer (Locked State) */}
+  <canvas
+    class="photo-ascii absolute inset-0 h-full w-full z-20 transition-opacity duration-700"
+  ></canvas>
+
+  {/* Real Image Layer (Unlocked State) */}
+  <img
+    src={src}
+    alt={title}
+    class="photo-img absolute inset-0 h-full w-full object-cover z-10 opacity-0 transition-opacity duration-700"
+  />
+
+  {/* Overlay (Title/Description) */}
+  <div class="absolute inset-0 z-30 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+    <div class="absolute bottom-0 left-0 p-5">
+      <p class="text-[10px] tracking-[0.2em] uppercase text-mesh-1 mb-1">{title}</p>
+      <p class="text-xs text-white/60 line-clamp-1">{description}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { createAsciiArt } from "../../ascii-art/asciiArt.ts";
+  import gsap from "gsap";
+
+  const cards = document.querySelectorAll<HTMLElement>(".photo-card");
+
+  cards.forEach(async (card) => {
+    const id = card.dataset.id!;
+    const src = card.dataset.src!;
+    const canvas = card.querySelector<HTMLCanvasElement>(".photo-ascii")!;
+    const img = card.querySelector<HTMLImageElement>(".photo-img")!;
+    
+    let isUnlocked = localStorage.getItem(`photo-unlocked-${id}`) === "true";
+    let cleanup: (() => void) | null = null;
+
+    const unlock = () => {
+      isUnlocked = true;
+      localStorage.setItem(`photo-unlocked-${id}`, "true");
+      
+      gsap.to(canvas, { opacity: 0, duration: 0.8, ease: "power2.inOut", onComplete: () => {
+        if (cleanup) cleanup();
+      }});
+      gsap.to(img, { opacity: 1, duration: 0.8, ease: "power2.inOut" });
+    };
+
+    if (isUnlocked) {
+      gsap.set(canvas, { opacity: 0, visibility: "hidden" });
+      gsap.set(img, { opacity: 1 });
+    } else {
+      cleanup = await createAsciiArt(canvas, src, {
+        fontSize: 24,
+        artStyle: "classic",
+        colorMode: "grayscale",
+        brightness: 0,
+        contrast: 0
+      });
+
+      card.addEventListener("click", () => {
+        if (!isUnlocked) unlock();
+      }, { once: true });
+    }
+  });
+</script>
