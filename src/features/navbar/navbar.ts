@@ -15,21 +15,31 @@ export function initNavbar(): () => void {
   const links = navbar.querySelectorAll<HTMLAnchorElement>(".navbar-link");
 
   ScrollTrigger.create({
-    trigger: document.body,
-    start: "top -100px",
-    onEnter: () => {
-      gsap.to(navbar, {
-        y: 0,
-        duration: 0.5,
-        ease: "power3.out",
-      });
-    },
-    onLeaveBack: () => {
-      gsap.to(navbar, {
-        y: "-100%",
-        duration: 0.35,
-        ease: "power2.in",
-      });
+    onUpdate: (self) => {
+      const scrollY = self.scroll();
+      const direction = self.direction; // 1 = down, -1 = up
+      const isHeroArea = scrollY < window.innerHeight * 0.8;
+
+      // Mostra ao scrollar para baixo (após 60px)
+      if (direction === 1 && scrollY > 60) {
+        gsap.to(navbar, {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: "expo.out",
+          overwrite: "auto",
+        });
+      }
+      // Esconde ao scrollar para cima APENAS se estiver na área do Hero ou muito no topo
+      else if (direction === -1 && (isHeroArea || scrollY < 60)) {
+        gsap.to(navbar, {
+          y: "-120%",
+          opacity: 0,
+          duration: 0.4,
+          ease: "power2.inOut",
+          overwrite: "auto",
+        });
+      }
     },
   });
 

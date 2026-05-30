@@ -1,0 +1,255 @@
+---
+import AsciiArt from "../ascii-art/AsciiArt.astro";
+import Container from "../container/Container.astro";
+import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg";
+---
+
+<section class="grid min-h-screen w-full grid-cols-1 items-center gap-14 py-24 md:grid-cols-2 md:gap-10">
+  <div class="mx-auto flex w-full max-w-md flex-col items-center gap-8 text-balance text-center md:mx-0 md:items-start md:text-left 2xl:max-w-xl">
+    <p id="hero-subtitle" class="text-xs tracking-[0.3em] uppercase text-mesh-1 2xl:text-sm">
+      Alexandre Tortoza
+    </p>
+
+    <h1 id="hero-title" class="text-lg font-light tracking-tight sm:text-6xl 2xl:text-8xl">
+      <span>$&#123;</span><span id="hero-role">Desenvolvedor</span><span>&#125;</span>
+    </h1>
+
+    <p id="hero-quote" class="max-w-sm text-sm italic leading-relaxed text-white/30 xl:max-w-md 2xl:max-w-xl 2xl:text-sm">
+      <span id="typewriter-text"></span><span id="typewriter-cursor">|</span>
+      <span id="hero-attribution" class="block mt-1 not-italic text-[10px] tracking-wider text-white/20 uppercase opacity-0 2xl:text-xs">— Frederick Brooks</span>
+    </p>
+  </div>
+
+  <div id="hero-card" class="hero-card-3d mx-auto md:mx-0 md:justify-self-center">
+    <Container class="max-w-md">
+      <div class="h-full w-full overflow-hidden p-3">
+        <AsciiArt
+          src={penguinsImage.src}
+          width="100%"
+          height="100%"
+          class="h-full w-full rounded-[2px]"
+          fontSize={24}
+          artStyle="classic"
+          colorMode="fullcolor"
+          ditherStrength={0}
+        />
+      </div>
+    </Container>
+  </div>
+</section>
+
+<style>
+  .hero-card-3d {
+    --card-tilt-x: 0deg;
+    --card-tilt-y: 0deg;
+    --card-pull-x: 0px;
+    --card-pull-y: 0px;
+
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    max-width: min(34rem, 100%);
+    overflow: hidden;
+    border-radius: 2px;
+    transform: translate3d(var(--card-pull-x), var(--card-pull-y), 0)
+      perspective(900px) rotateX(var(--card-tilt-x))
+      rotateY(var(--card-tilt-y));
+    transform-style: preserve-3d;
+    transition: box-shadow 600ms ease;
+    animation: card-float 8s ease-in-out infinite;
+    box-shadow: 0 22px 70px rgb(0 0 0 / 0.24);
+    will-change: transform, translate;
+  }
+
+  @media (min-width: 1536px) {
+    .hero-card-3d {
+      max-width: min(44rem, 100%);
+    }
+  }
+
+  .hero-card-3d::after {
+    position: absolute;
+    inset: -45%;
+    z-index: 2;
+    pointer-events: none;
+    content: "";
+    background: linear-gradient(
+      115deg,
+      transparent 38%,
+      rgb(255 255 255 / 0.06) 44%,
+      rgb(30 167 182 / 0.24) 50%,
+      rgb(255 255 255 / 0.08) 56%,
+      transparent 64%
+    );
+    transform: translateX(-45%) rotate(8deg);
+    animation: card-shine 8s ease-in-out infinite;
+  }
+
+  .hero-card-3d canvas {
+    display: block;
+    opacity: 0.86;
+  }
+
+  .hero-card-3d:hover {
+    box-shadow:
+      0 28px 90px rgb(0 0 0 / 0.34),
+      0 0 38px rgb(30 167 182 / 0.08);
+  }
+
+  @keyframes card-float {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+
+    50% {
+      translate: 0 -10px;
+    }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  #typewriter-cursor {
+    animation: blink 0.8s step-end infinite;
+  }
+
+  @keyframes card-shine {
+    0%,
+    45% {
+      opacity: 0;
+      transform: translateX(-45%) rotate(8deg);
+    }
+
+    55% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateX(45%) rotate(8deg);
+    }
+  }
+</style>
+
+<script>
+  const card = document.querySelector<HTMLElement>(".hero-card-3d");
+
+  import { animateHero } from "./heroAnimation.ts";
+  animateHero();
+
+  if (card) {
+    const current = {
+      pullX: 0,
+      pullY: 0,
+      tiltX: 0,
+      tiltY: 0,
+    };
+    const target = {
+      pullX: 0,
+      pullY: 0,
+      tiltX: 0,
+      tiltY: 0,
+    };
+    const ease = 0.09;
+    let isHovering = false;
+
+    const resetCard = () => {
+      target.pullX = 0;
+      target.pullY = 0;
+      target.tiltX = 0;
+      target.tiltY = 0;
+    };
+
+    const animateCard = () => {
+      current.pullX += (target.pullX - current.pullX) * ease;
+      current.pullY += (target.pullY - current.pullY) * ease;
+      current.tiltX += (target.tiltX - current.tiltX) * ease;
+      current.tiltY += (target.tiltY - current.tiltY) * ease;
+
+      card.style.setProperty("--card-tilt-x", `${current.tiltX}deg`);
+      card.style.setProperty("--card-tilt-y", `${current.tiltY}deg`);
+      card.style.setProperty("--card-pull-x", `${current.pullX}px`);
+      card.style.setProperty("--card-pull-y", `${current.pullY}px`);
+
+      requestAnimationFrame(animateCard);
+    };
+
+    card.addEventListener("pointerenter", () => {
+      isHovering = true;
+    });
+
+    card.addEventListener("pointerleave", () => {
+      isHovering = false;
+      resetCard();
+    });
+
+    card.addEventListener("pointermove", (event) => {
+      if (!isHovering) return;
+
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const deltaX = event.clientX - centerX;
+      const deltaY = event.clientY - centerY;
+      const range = Math.min(rect.width, rect.height) * 1.2;
+
+      const distance = Math.hypot(deltaX, deltaY);
+      if (distance > range) {
+        resetCard();
+        return;
+      }
+
+      const influence = 1 - distance / range;
+      const nx = Math.max(-1, Math.min(1, deltaX / range));
+      const ny = Math.max(-1, Math.min(1, deltaY / range));
+
+      target.tiltX = ny * -16;
+      target.tiltY = nx * 20;
+      target.pullX = nx * influence * 32;
+      target.pullY = ny * influence * 32;
+    });
+
+    animateCard();
+  }
+
+  import { cycleHeroRole } from "./heroRoleCycle.ts";
+
+  const roleEl = document.getElementById("hero-role");
+  if (roleEl) cycleHeroRole(roleEl);
+
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { TextPlugin } from "gsap/TextPlugin";
+
+  gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+  const quote =
+    "\"O programador, como o poeta, trabalha apenas ligeiramente afastado do puro pensamento. Constrói seus castelos no ar, a partir do ar, criando com esforço da imaginação.\"";
+
+  const textEl = document.getElementById("typewriter-text");
+  const cursorEl = document.getElementById("typewriter-cursor");
+  const attrEl = document.getElementById("hero-attribution");
+
+  if (textEl && cursorEl && attrEl) {
+    ScrollTrigger.create({
+      trigger: textEl,
+      start: "top 85%",
+      once: true,
+      onEnter: () => {
+        gsap.to(textEl, {
+          text: quote,
+          duration: 3,
+          ease: "none",
+          delay: 0.3,
+          onComplete: () => {
+            gsap.to(cursorEl, { opacity: 0, duration: 0.3 });
+            gsap.to(attrEl, { opacity: 1, y: 0, duration: 0.6 });
+          },
+        });
+      },
+    });
+  }
+</script>

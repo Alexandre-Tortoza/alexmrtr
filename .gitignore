@@ -22,6 +22,7 @@ Thumbs.db
 
 # Astro
 .cache/
+.astro/
 
 # Debug logs
 npm-debug.log*
