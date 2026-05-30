@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../app/layouts/BaseLayout.astro";
-import { formatDateFull } from "../../features/blog/api/posts.ts";
+import { formatDateFull, getAdjacentPosts } from "../../features/blog/api/posts.ts";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -19,9 +19,14 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+
+const slug = entry.id.replace(/\.md$/, "");
+const { prev, next } = await getAdjacentPosts(slug);
 ---
 
 <BaseLayout title={`${entry.data.title} — Alexandre Tortoza`} description={entry.data.description}>
+  <nav id="toc-sidebar" aria-label="Índice do artigo"></nav>
+
   <article class="py-16 lg:py-24">
     <header class="mb-12 max-w-3xl">
       <a
@@ -56,6 +61,32 @@ const { Content } = await render(entry);
     <div class="prose-custom max-w-3xl text-sm leading-relaxed text-white/70">
       <Content />
     </div>
+
+    <footer class="mt-20 max-w-3xl border-t border-white/5 pt-10">
+      <div class="flex flex-wrap items-start justify-between gap-6">
+        <a
+          href="/blog"
+          class="text-[10px] tracking-wider text-white/40 uppercase transition-colors hover:text-white/70"
+        >
+          ← Voltar ao blog
+        </a>
+
+        <div class="flex flex-wrap gap-8 text-right">
+          {prev && (
+            <a href={`/blog/${prev.slug}`} class="group">
+              <p class="mb-1 text-[10px] tracking-wider text-white/30 uppercase">Post anterior</p>
+              <p class="text-sm text-white/70 transition-colors group-hover:text-white/90">{prev.meta.title}</p>
+            </a>
+          )}
+          {next && (
+            <a href={`/blog/${next.slug}`} class="group">
+              <p class="mb-1 text-[10px] tracking-wider text-white/30 uppercase">Próximo post</p>
+              <p class="text-sm text-white/70 transition-colors group-hover:text-white/90">{next.meta.title}</p>
+            </a>
+          )}
+        </div>
+      </div>
+    </footer>
   </article>
 </BaseLayout>
 
@@ -148,4 +179,95 @@ const { Content } = await render(entry);
     border-radius: 0.25rem;
     margin: 1.5rem 0;
   }
+
+  /* ── Entry animation ────────────────────────────────────────────────────── */
+  article {
+    animation: post-enter 0.45s ease-out both;
+    animation-delay: 0.05s;
+  }
+  @keyframes post-enter {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── TOC sidebar ────────────────────────────────────────────────────────── */
+  #toc-sidebar {
+    position: fixed;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    z-index: 40;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  @media (max-width: 1279px) {
+    #toc-sidebar { display: none; }
+  }
+
+  :global(.toc-bar) {
+    height: 2px;
+    border-radius: 1px;
+    background: rgba(255, 255, 255, 0.18);
+    width: 6px;
+    cursor: pointer;
+    transition: width 0.35s ease, background 0.35s ease;
+  }
+  :global(.toc-bar.is-near)   { width: 13px; background: rgba(255, 255, 255, 0.36); }
+  :global(.toc-bar.is-active) { width: 28px; background: rgb(30, 167, 182); }
 </style>
+
+<script>
+  const prose   = document.querySelector<HTMLElement>(".prose-custom");
+  const sidebar = document.getElementById("toc-sidebar");
+  if (!prose || !sidebar) throw new Error();
+
+  const headings = [...prose.querySelectorAll<HTMLElement>("h2, h3")];
+  if (!headings.length) {
+    sidebar.style.display = "none";
+  } else {
+    headings.forEach((h) => {
+      if (!h.id)
+        h.id = h.textContent!.toLowerCase().replace(/[^\w]+/g, "-");
+    });
+
+    const bars = headings.map((h) => {
+      const bar = document.createElement("span");
+      bar.className = "toc-bar";
+      bar.title = h.textContent ?? "";
+      bar.addEventListener("click", () =>
+        h.scrollIntoView({ behavior: "smooth", block: "start" })
+      );
+      sidebar.appendChild(bar);
+      return bar;
+    });
+
+    sidebar.style.opacity = "1";
+
+    function setActive(idx: number) {
+      bars.forEach((b, i) => {
+        const d = Math.abs(i - idx);
+        b.classList.toggle("is-active", d === 0);
+        b.classList.toggle("is-near",   d === 1);
+      });
+    }
+
+    setActive(0);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (!visible.length) return;
+        const idx = headings.indexOf(visible[0].target as HTMLElement);
+        if (idx !== -1) setActive(idx);
+      },
+      { rootMargin: "-10% 0px -60% 0px", threshold: 0 }
+    );
+    headings.forEach((h) => observer.observe(h));
+  }
+</script>

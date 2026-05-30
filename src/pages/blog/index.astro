@@ -50,3 +50,46 @@ const posts = await getPosts();
     to   { opacity: 1; transform: scale(1); }
   }
 </style>
+
+<script>
+  import gsap from "gsap";
+
+  document.querySelectorAll<HTMLElement>("[data-post-card]").forEach((card) => {
+    const link = card.querySelector<HTMLAnchorElement>("a[href]")!;
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const href = link.getAttribute("href")!;
+      const rect = card.getBoundingClientRect();
+
+      const clone = document.createElement("div");
+      Object.assign(clone.style, {
+        position:       "fixed",
+        left:           rect.left   + "px",
+        top:            rect.top    + "px",
+        width:          rect.width  + "px",
+        height:         rect.height + "px",
+        zIndex:         "9999",
+        borderRadius:   "2px",
+        border:         "1px solid rgba(255,255,255,0.05)",
+        background:     "rgba(255,255,255,0.04)",
+        backdropFilter: "blur(12px)",
+        pointerEvents:  "none",
+      });
+      document.body.appendChild(clone);
+
+      const scaleX = window.innerWidth  / rect.width;
+      const scaleY = window.innerHeight / rect.height;
+      const dx = window.innerWidth  / 2 - (rect.left + rect.width  / 2);
+      const dy = window.innerHeight / 2 - (rect.top  + rect.height / 2);
+
+      gsap.to(clone, {
+        x: dx, y: dy,
+        scale: Math.max(scaleX, scaleY) * 1.05,
+        borderRadius: 0,
+        duration: 0.4,
+        ease: "power2.in",
+        onComplete: () => { window.location.href = href; },
+      });
+    });
+  });
+</script>

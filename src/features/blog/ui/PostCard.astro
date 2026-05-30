@@ -9,7 +9,7 @@ export interface Props {
 const { post } = Astro.props;
 ---
 
-<article class="group rounded-sm border border-white/5 bg-white/[0.03] backdrop-blur-md p-6 transition-all hover:border-mesh-1/30 hover:bg-white/[0.06]">
+<article data-post-card class="relative group rounded-sm border border-white/5 bg-white/[0.03] backdrop-blur-md p-6 transition-all hover:border-mesh-1/30 hover:bg-white/[0.06]">
   <div class="mb-3 flex items-center gap-2 text-[10px] tracking-wider text-white/40 uppercase">
     <time datetime={post.meta.pubDate.toISOString()}>
       {formatDate(post.meta.pubDate)}

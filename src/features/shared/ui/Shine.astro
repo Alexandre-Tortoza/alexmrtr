@@ -1,0 +1,31 @@
+<div class="shine pointer-events-none absolute inset-[-45%] z-20" />
+
+<style>
+  .shine {
+    background: linear-gradient(
+      115deg,
+      transparent 38%,
+      rgb(255 255 255 / 0.06) 44%,
+      rgb(30 167 182 / 0.24) 50%,
+      rgb(255 255 255 / 0.08) 56%,
+      transparent 64%
+    );
+    transform: translateX(-45%) rotate(8deg);
+    animation: shine-anim 8s ease-in-out infinite;
+  }
+
+  @keyframes shine-anim {
+    0%,
+    45% {
+      opacity: 0;
+      transform: translateX(-45%) rotate(8deg);
+    }
+    55% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(45%) rotate(8deg);
+    }
+  }
+</style>

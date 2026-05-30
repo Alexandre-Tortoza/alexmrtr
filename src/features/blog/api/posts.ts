@@ -55,3 +55,16 @@ export function formatDateFull(date: Date): string {
     year: "numeric",
   });
 }
+
+export async function getAdjacentPosts(slug: string): Promise<{
+  prev: PostListItem | null;
+  next: PostListItem | null;
+}> {
+  const all = await getPosts(); // DESC por data: index 0 = mais novo
+  const idx = all.findIndex((p) => p.slug === slug);
+  if (idx === -1) return { prev: null, next: null };
+  return {
+    next: idx > 0 ? all[idx - 1] : null,
+    prev: idx < all.length - 1 ? all[idx + 1] : null,
+  };
+}
