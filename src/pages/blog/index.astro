@@ -1,15 +1,52 @@
 ---
 import BaseLayout from "../../app/layouts/BaseLayout.astro";
+import PostCard from "../../features/blog/ui/PostCard.astro";
+import { getPosts } from "../../features/blog/api/posts.ts";
+import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg";
+
+const posts = await getPosts();
 ---
 
-<BaseLayout title="Blog — Alexandre Tortoza" description="Em breve: Pensamentos sobre tecnologia, desenvolvimento e experimentos.">
-  <div class="flex min-h-[calc(100vh-200px)] items-center justify-center py-12">
-    <div class="flex h-full min-h-[400px] w-full items-center justify-center rounded-sm border border-white/5 bg-white/[0.03] backdrop-blur-md">
-      <div class="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-8 py-4 backdrop-blur-sm">
-        <span class="text-xs font-bold tracking-[0.3em] uppercase text-white/80">
-          Em Construção 🏗️
-        </span>
-      </div>
+<BaseLayout
+  title="Blog — Alexandre Tortoza"
+  description="Pensamentos sobre tecnologia, desenvolvimento e experimentos."
+>
+  <div class="page-hero relative mt-20 h-[55vh] w-full overflow-hidden rounded-sm border border-white/10">
+    <img src={penguinsImage.src} alt="Blog" class="h-full w-full object-cover" />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+    <div class="absolute bottom-0 left-0 p-6 lg:p-10">
+      <p class="text-[10px] tracking-[0.25em] uppercase text-mesh-1 mb-1">Blog</p>
+      <h1 class="text-3xl font-light tracking-tight text-white/90 lg:text-5xl">
+        Artigos e anotações
+      </h1>
     </div>
   </div>
+
+  <section class="py-16 lg:py-24">
+
+    {posts.length > 0 ? (
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    ) : (
+      <div class="flex min-h-[300px] items-center justify-center rounded-sm border border-white/5 bg-white/[0.03]">
+        <p class="text-xs tracking-wider text-white/30 uppercase">
+          Nenhum post publicado ainda.
+        </p>
+      </div>
+    )}
+  </section>
 </BaseLayout>
+
+<style>
+  .page-hero {
+    animation: hero-enter 0.5s ease-out both;
+    animation-delay: 0.05s;
+  }
+  @keyframes hero-enter {
+    from { opacity: 0; transform: scale(1.06); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+</style>

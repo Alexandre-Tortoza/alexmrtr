@@ -1,8 +1,8 @@
 ---
 import "aos/dist/aos.css";
 import "../styles/globals.css";
-import LavaLampBackground from "../../features/lava-lamp-background/LavaLampBackground.astro";
 import MeshBackground from "../../features/mesh-background/MeshBackground.astro";
+import Stardust from "../../features/stardust/Stardust.astro";
 import Navbar from "../../features/navbar/Navbar.astro";
 
 export interface Props {
@@ -24,7 +24,7 @@ const { title = "Alexandre Tortoza", description = "Programador" } =
   </head>
   <body class="relative min-h-screen overflow-x-hidden">
     <MeshBackground />
-    <LavaLampBackground />
+    <Stardust />
 
     <Navbar />
 

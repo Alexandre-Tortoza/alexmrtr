@@ -2,54 +2,30 @@
 import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg";
 
 const cards = [
-  {
-    href: "/photos",
-    label: "Galeria",
-    desc: "Fotografia e momentos",
-    image: penguinsImage.src,
-    floatDelay: "0s",
-    shineDelay: "0s",
-  },
-  {
-    href: "/blog",
-    label: "Blog",
-    desc: "Artigos e anotações",
-    image: penguinsImage.src,
-    floatDelay: "-2.7s",
-    shineDelay: "-2.7s",
-  },
-  {
-    href: "/projects",
-    label: "Projetos",
-    desc: "O que estou construindo",
-    image: penguinsImage.src,
-    floatDelay: "-5.3s",
-    shineDelay: "-5.3s",
-  },
+  { href: "/photos",   label: "Galeria",   desc: "Fotografia e momentos",   image: penguinsImage.src },
+  { href: "/blog",     label: "Blog",      desc: "Artigos e anotações",     image: penguinsImage.src },
+  { href: "/projects", label: "Projetos",  desc: "O que estou construindo", image: penguinsImage.src },
 ];
 ---
 
 <section id="pages-nav" class="py-24 4xl:py-32">
   <h2
     data-aos="fade-up"
-    class="mb-12 text-xs tracking-[0.3em] uppercase text-mesh-1 2xl:text-sm 4xl:text-base"
+    class="mb-16 text-xs tracking-[0.3em] uppercase text-mesh-1 2xl:text-sm 4xl:text-base"
   >
     Explore
   </h2>
 
-  <div class="carousel-viewport overflow-hidden">
-    <div class="carousel-track flex gap-6 will-change-transform select-none">
+  <div class="carousel-scene">
+    <div class="carousel-ring">
       {cards.map((card, i) => (
         <a
           href={card.href}
-          class="nav-card group relative flex-none"
+          class="nav-card"
           data-index={i}
           draggable="false"
         >
-          <div
-            class="card-3d relative w-full overflow-hidden rounded-sm border border-white/10 bg-[var(--bg-primary)] cursor-pointer"
-            style={`animation-delay: ${card.floatDelay}`}
-          >
+          <div class="card-3d">
             <img
               src={card.image}
               alt={card.label}
@@ -62,76 +38,114 @@ const cards = [
               data-src={card.image}
             />
 
-            <div class="card-overlay absolute inset-0 z-10 flex flex-col justify-end p-5 2xl:p-7 4xl:p-9">
-              <span class="mb-1 text-[10px] tracking-[0.25em] uppercase text-mesh-1 2xl:text-xs 4xl:text-sm">
+            <div class="card-overlay absolute inset-0 z-10 flex flex-col justify-end p-5 2xl:p-7">
+              <span class="mb-1 text-[10px] tracking-[0.25em] uppercase text-mesh-1 2xl:text-xs">
                 {card.label}
               </span>
-              <p class="text-sm leading-snug text-white/50 2xl:text-base 4xl:text-lg">
+              <p class="text-sm leading-snug text-white/50 2xl:text-base">
                 {card.desc}
               </p>
             </div>
 
-            <div
-              class="card-shine pointer-events-none absolute inset-[-45%] z-20"
-              style={`animation-delay: ${card.shineDelay}`}
-            />
+            <div class="card-shine pointer-events-none absolute inset-[-45%] z-20" />
           </div>
         </a>
       ))}
     </div>
   </div>
 
-  <div class="carousel-dots mt-8 flex justify-center gap-2 md:hidden" aria-hidden="true">
+  <div class="carousel-dots mt-10 flex justify-center gap-2" aria-hidden="true">
     {cards.map((_, i) => (
-      <span
-        class="dot h-1.5 rounded-full bg-white/20 transition-all duration-300"
-        data-dot={i}
-      />
+      <span class="dot rounded-full bg-white/20 transition-all duration-300" data-dot={i} />
     ))}
   </div>
 </section>
 
 <style>
+  /* ── Scene ──────────────────────────────────────────────────────────────── */
+  .carousel-scene {
+    perspective: 1200px;
+    perspective-origin: 50% 50%;
+    height: 320px;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  @media (max-width: 767px) {
+    .carousel-scene { height: 200px; }
+  }
+
+  /* ── Ring (rotated by GSAP) ─────────────────────────────────────────────── */
+  .carousel-ring {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    position: relative;
+  }
+
+  /* ── Cards: centered absolutely; GSAP sets rotateY + z + scale + opacity ── */
   .nav-card {
-    width: calc(33.333% - 1rem);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 360px;
+    margin-left: -180px;
+    margin-top: -120px; /* half of 360*(2/3) = 240 */
+    transform-style: preserve-3d;
+    cursor: grab;
+    text-decoration: none;
+  }
+
+  .carousel-scene.is-dragging,
+  .carousel-scene.is-dragging .nav-card {
+    cursor: grabbing;
   }
 
   @media (max-width: 767px) {
     .nav-card {
-      width: 82%;
+      width: 220px;
+      margin-left: -110px;
+      margin-top: -73px;
     }
   }
 
-  /* Aspect ratio via padding-bottom trick so the card has height */
+  /* ── Inner card: tilt + float ───────────────────────────────────────────── */
   .card-3d {
-    aspect-ratio: 3 / 2;
-
     --card-tilt-x: 0deg;
     --card-tilt-y: 0deg;
     --card-pull-x: 0px;
     --card-pull-y: 0px;
 
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: 2px;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    background: var(--bg-primary);
+    box-shadow: 0 22px 70px rgb(0 0 0 / 0.24);
+    transition: box-shadow 600ms ease;
+    will-change: transform, translate;
+
+    /* translate (float) and transform (tilt) are independent CSS properties */
     transform: translate3d(var(--card-pull-x), var(--card-pull-y), 0)
-      perspective(900px)
       rotateX(var(--card-tilt-x))
       rotateY(var(--card-tilt-y));
-    transform-style: preserve-3d;
-    transition: box-shadow 600ms ease;
     animation: nav-float 8s ease-in-out infinite;
-    box-shadow: 0 22px 70px rgb(0 0 0 / 0.24);
-    will-change: transform, translate;
   }
 
-  .card-3d:hover {
+  .nav-card.is-active .card-3d {
     box-shadow:
       0 28px 90px rgb(0 0 0 / 0.34),
       0 0 38px rgb(30 167 182 / 0.08);
   }
 
-  .card-overlay {
-    background: linear-gradient(to top, rgb(0 0 0 / 0.72) 0%, transparent 55%);
+  @keyframes nav-float {
+    0%, 100% { translate: 0 0; }
+    50%       { translate: 0 -10px; }
   }
 
+  /* ── Shine ──────────────────────────────────────────────────────────────── */
   .card-shine {
     background: linear-gradient(
       115deg,
@@ -145,21 +159,23 @@ const cards = [
     animation: nav-shine 8s ease-in-out infinite;
   }
 
-  @keyframes nav-float {
-    0%, 100% { translate: 0 0; }
-    50%       { translate: 0 -10px; }
-  }
-
   @keyframes nav-shine {
     0%, 45%  { opacity: 0; transform: translateX(-45%) rotate(8deg); }
     55%      { opacity: 1; }
     100%     { opacity: 0; transform: translateX(45%) rotate(8deg); }
   }
 
-  .dot {
-    width: 0.375rem;
+  /* ── Text overlay ───────────────────────────────────────────────────────── */
+  .card-overlay {
+    background: linear-gradient(to top, rgb(0 0 0 / 0.72) 0%, transparent 55%);
   }
 
+  /* ── Dots ───────────────────────────────────────────────────────────────── */
+  .dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    transition: background-color 0.3s, width 0.3s;
+  }
   .dot.active {
     background-color: rgb(30 167 182);
     width: 1.25rem;
@@ -173,6 +189,276 @@ const cards = [
 
   gsap.registerPlugin(ScrollTrigger);
 
+  // ── Config ───────────────────────────────────────────────────────────────
+  const N = 3;
+  const RADIUS_DESKTOP = 460;
+  const RADIUS_MOBILE  = 240;
+  const getRadius = () => window.innerWidth < 768 ? RADIUS_MOBILE : RADIUS_DESKTOP;
+
+  // ── State ────────────────────────────────────────────────────────────────
+  let currentIndex = 0;
+  let ringAngle    = 0; // tracks ring's current visual angle (may accumulate during drag)
+
+  // ── Elements ─────────────────────────────────────────────────────────────
+  const scene    = document.querySelector<HTMLElement>(".carousel-scene")!;
+  const ring     = document.querySelector<HTMLElement>(".carousel-ring")!;
+  const navCards = [...document.querySelectorAll<HTMLElement>(".nav-card")];
+  const dots     = [...document.querySelectorAll<HTMLElement>(".dot")];
+
+  // ── Helper: depth factor from effective angle (handles any range) ─────────
+  function depthCos(effectiveAngle: number): number {
+    const n = ((effectiveAngle % 360) + 360) % 360; // 0..360
+    const a = n > 180 ? n - 360 : n;                // -180..180
+    return Math.cos(a * Math.PI / 180);              // -1..1
+  }
+
+  // ── Place cards on the ring ───────────────────────────────────────────────
+  // GSAP applies transforms as: translate → rotate → scale.
+  // The classic CSS carousel uses `rotateY(θ) translateZ(R)` (rotate THEN translate),
+  // which cannot be replicated with GSAP's individual properties.
+  // Solution: pre-compute the XZ position in the parent's space using trigonometry
+  // so that `translate3d(x,0,z) rotateY(θ)` produces the same result as
+  // `rotateY(θ) translateZ(R)` for each card.
+  function initPositions() {
+    const R = getRadius();
+    gsap.set(ring, { transformStyle: "preserve-3d" });
+    navCards.forEach((card, i) => {
+      const rad = (i * 120 * Math.PI) / 180;
+      gsap.set(card, {
+        x: R * Math.sin(rad),   // lateral offset
+        z: R * Math.cos(rad),   // depth offset
+        rotateY: i * 120,       // face outward
+        transformOrigin: "50% 50%",
+        transformStyle: "preserve-3d",
+      });
+    });
+  }
+
+  // ── Apply scale/opacity/isActive for a given ring angle (no ring anim) ───
+  function applyDepth(angle: number) {
+    navCards.forEach((card, i) => {
+      const cos = depthCos(angle + i * 120);
+      const t   = (cos + 1) / 2;
+      gsap.set(card, { scale: 0.72 + 0.28 * t, opacity: 0.30 + 0.70 * t });
+      card.classList.toggle("is-active", cos > 0.5);
+    });
+    dots.forEach((d, j) => d.classList.toggle("active", j === currentIndex));
+  }
+
+  // ── Instant update during drag (no tweens) ────────────────────────────────
+  function dragUpdate(angle: number) {
+    gsap.set(ring, { rotateY: angle, transformStyle: "preserve-3d" });
+    applyDepth(angle);
+  }
+
+  // ── Snap to a card index with smooth animation ────────────────────────────
+  function snapTo(index: number) {
+    currentIndex = ((index % N) + N) % N;
+    const canonical = -currentIndex * 120;
+
+    // Shortest angular path from current visual angle to canonical
+    const visual = (gsap.getProperty(ring, "rotateY") as number) || ringAngle;
+    let delta    = canonical - (visual % 360);
+    if (delta >  180) delta -= 360;
+    if (delta < -180) delta += 360;
+    const target = visual + delta;
+
+    ringAngle = canonical;
+
+    const dur  = 0.65;
+    const ease = "power3.out";
+
+    gsap.to(ring, {
+      rotateY: target,
+      duration: dur,
+      ease,
+      onComplete: () => gsap.set(ring, { rotateY: canonical, transformStyle: "preserve-3d" }),
+    });
+
+    navCards.forEach((card, i) => {
+      const cos = depthCos(canonical + i * 120);
+      const t   = (cos + 1) / 2;
+      gsap.to(card, { scale: 0.72 + 0.28 * t, opacity: 0.30 + 0.70 * t, duration: dur, ease });
+      card.classList.toggle("is-active", cos > 0.5);
+    });
+
+    dots.forEach((d, j) => d.classList.toggle("active", j === currentIndex));
+  }
+
+  // ── Drag ─────────────────────────────────────────────────────────────────
+  let dragging   = false;
+  let startX     = 0;
+  let startAngle = 0;
+  let dragDelta  = 0;
+  const SENS     = 0.35; // deg per px
+
+  scene.addEventListener("pointerdown", (e) => {
+    dragging   = true;
+    dragDelta  = 0;
+    startX     = e.clientX;
+    startAngle = ringAngle;
+    scene.classList.add("is-dragging");
+    scene.setPointerCapture(e.pointerId);
+    gsap.killTweensOf(ring);
+    navCards.forEach((c) => gsap.killTweensOf(c));
+  });
+
+  scene.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const dx  = e.clientX - startX;
+    dragDelta = Math.abs(dx);
+    ringAngle = startAngle - dx * SENS;
+    dragUpdate(ringAngle);
+  });
+
+  scene.addEventListener("pointerup", (e) => {
+    if (!dragging) return;
+    dragging = false;
+    scene.classList.remove("is-dragging");
+
+    if (dragDelta > 6) {
+      // Was a real drag — snap to nearest card
+      const dx      = e.clientX - startX;
+      const nearest = Math.abs(dx) > 30
+        ? Math.round(-ringAngle / 120)
+        : currentIndex;
+      snapTo(nearest);
+      return;
+    }
+
+    // Was a click — use X-zone to decide action
+    const rect = scene.getBoundingClientRect();
+    const relX = (e.clientX - rect.left) / rect.width;
+
+    if (relX < 0.30) {
+      snapTo(currentIndex - 1);
+    } else if (relX > 0.70) {
+      snapTo(currentIndex + 1);
+    } else {
+      const activeCard = navCards.find((c) => c.classList.contains("is-active"));
+      if (activeCard) {
+        navigateWithZoom(activeCard, activeCard.getAttribute("href")!);
+      }
+    }
+  });
+
+  // Prevent <a> default navigation — all routing is handled via pointerup
+  scene.addEventListener("click", (e) => { e.preventDefault(); });
+
+  scene.addEventListener("pointercancel", () => {
+    if (dragging) { dragging = false; scene.classList.remove("is-dragging"); snapTo(currentIndex); }
+  });
+
+  // ── Navigate with zoom (clone expands to fill screen, then navigates) ──────
+  function navigateWithZoom(navCard: HTMLElement, href: string) {
+    const card3d = navCard.querySelector<HTMLElement>(".card-3d")!;
+    const imgSrc = navCard.querySelector<HTMLImageElement>(".card-img")?.src ?? "";
+    const rect   = card3d.getBoundingClientRect();
+
+    const clone = document.createElement("div");
+    Object.assign(clone.style, {
+      position:           "fixed",
+      left:               rect.left   + "px",
+      top:                rect.top    + "px",
+      width:              rect.width  + "px",
+      height:             rect.height + "px",
+      zIndex:             "9999",
+      borderRadius:       "2px",
+      border:             "1px solid rgba(255,255,255,0.1)",
+      overflow:           "hidden",
+      pointerEvents:      "none",
+      backgroundImage:    `url(${imgSrc})`,
+      backgroundSize:     "cover",
+      backgroundPosition: "center",
+    });
+    const overlay = document.createElement("div");
+    overlay.style.cssText =
+      "position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.72),transparent 55%);";
+    clone.appendChild(overlay);
+    document.body.appendChild(clone);
+
+    const scaleX = window.innerWidth  / rect.width;
+    const scaleY = window.innerHeight / rect.height;
+    const scale  = Math.max(scaleX, scaleY) * 1.05;
+    const dx = window.innerWidth  / 2 - (rect.left + rect.width  / 2);
+    const dy = window.innerHeight / 2 - (rect.top  + rect.height / 2);
+
+    gsap.to(clone, {
+      x: dx, y: dy,
+      scale,
+      borderRadius: 0,
+      duration: 0.45,
+      ease: "power2.in",
+      onComplete: () => { window.location.href = href; },
+    });
+  }
+
+  // ── 3D Tilt (active card only) ───────────────────────────────────────────
+  interface TiltState { pullX: number; pullY: number; tiltX: number; tiltY: number; }
+  const cardStates = new Map<HTMLElement, { cur: TiltState; tgt: TiltState }>();
+
+  navCards.forEach((navCard) => {
+    const inner = navCard.querySelector<HTMLElement>(".card-3d");
+    if (!inner) return;
+
+    const state = {
+      cur: { pullX: 0, pullY: 0, tiltX: 0, tiltY: 0 },
+      tgt: { pullX: 0, pullY: 0, tiltX: 0, tiltY: 0 },
+    };
+    cardStates.set(inner, state);
+
+    const reset = () => {
+      state.tgt.pullX = state.tgt.pullY = state.tgt.tiltX = state.tgt.tiltY = 0;
+    };
+
+    navCard.addEventListener("pointerleave", reset);
+    navCard.addEventListener("pointermove", (e) => {
+      if (!navCard.classList.contains("is-active")) { reset(); return; }
+      const rect = inner.getBoundingClientRect();
+      const dx   = e.clientX - (rect.left + rect.width  / 2);
+      const dy   = e.clientY - (rect.top  + rect.height / 2);
+      const rng  = Math.min(rect.width, rect.height) * 1.2;
+      const dist = Math.hypot(dx, dy);
+      if (dist > rng) { reset(); return; }
+      const inf  = 1 - dist / rng;
+      const nx   = Math.max(-1, Math.min(1, dx / rng));
+      const ny   = Math.max(-1, Math.min(1, dy / rng));
+      state.tgt.tiltX  = ny * -12;
+      state.tgt.tiltY  = nx *  16;
+      state.tgt.pullX  = nx * inf * 24;
+      state.tgt.pullY  = ny * inf * 24;
+    });
+  });
+
+  const EASE_F = 0.09;
+  gsap.ticker.add(() => {
+    cardStates.forEach(({ cur, tgt }, inner) => {
+      cur.pullX += (tgt.pullX - cur.pullX) * EASE_F;
+      cur.pullY += (tgt.pullY - cur.pullY) * EASE_F;
+      cur.tiltX += (tgt.tiltX - cur.tiltX) * EASE_F;
+      cur.tiltY += (tgt.tiltY - cur.tiltY) * EASE_F;
+      inner.style.setProperty("--card-tilt-x", `${cur.tiltX}deg`);
+      inner.style.setProperty("--card-tilt-y", `${cur.tiltY}deg`);
+      inner.style.setProperty("--card-pull-x", `${cur.pullX}px`);
+      inner.style.setProperty("--card-pull-y", `${cur.pullY}px`);
+    });
+  });
+
+  // ── Hover: ASCII → real image ─────────────────────────────────────────────
+  navCards.forEach((navCard) => {
+    const ascii = navCard.querySelector<HTMLCanvasElement>(".card-ascii");
+    const img   = navCard.querySelector<HTMLImageElement>(".card-img");
+
+    navCard.addEventListener("pointerenter", () => {
+      gsap.to(ascii, { opacity: 0,    duration: 0.5, ease: "power2.out" });
+      gsap.to(img,   { opacity: 1,    duration: 0.5, ease: "power2.out" });
+    });
+    navCard.addEventListener("pointerleave", () => {
+      gsap.to(ascii, { opacity: 0.86, duration: 0.6, ease: "power2.inOut" });
+      gsap.to(img,   { opacity: 0,    duration: 0.6, ease: "power2.inOut" });
+    });
+  });
+
   // ── ASCII art ─────────────────────────────────────────────────────────────
   const asciiCleanups: (() => void)[] = [];
 
@@ -185,169 +471,26 @@ const cards = [
     }).then((stop) => asciiCleanups.push(stop));
   });
 
-  // ── 3D tilt per card ──────────────────────────────────────────────────────
-  interface TiltState {
-    pullX: number; pullY: number; tiltX: number; tiltY: number;
-  }
+  // ── Init + ScrollTrigger entrance ────────────────────────────────────────
+  initPositions();
+  applyDepth(0);
+  gsap.set(ring, { rotateY: 0, transformStyle: "preserve-3d" });
 
-  const cardStates = new Map<HTMLElement, { cur: TiltState; tgt: TiltState }>();
-
-  document.querySelectorAll<HTMLElement>(".card-3d").forEach((card) => {
-    const state = {
-      cur: { pullX: 0, pullY: 0, tiltX: 0, tiltY: 0 },
-      tgt: { pullX: 0, pullY: 0, tiltX: 0, tiltY: 0 },
-    };
-    cardStates.set(card, state);
-
-    const reset = () => {
-      state.tgt.pullX = state.tgt.pullY = state.tgt.tiltX = state.tgt.tiltY = 0;
-    };
-
-    card.addEventListener("pointerenter", () => {});
-    card.addEventListener("pointerleave", reset);
-    card.addEventListener("pointermove", (e) => {
-      const rect = card.getBoundingClientRect();
-      const dx = e.clientX - (rect.left + rect.width / 2);
-      const dy = e.clientY - (rect.top + rect.height / 2);
-      const range = Math.min(rect.width, rect.height) * 1.2;
-      const dist = Math.hypot(dx, dy);
-      if (dist > range) { reset(); return; }
-      const inf = 1 - dist / range;
-      const nx = Math.max(-1, Math.min(1, dx / range));
-      const ny = Math.max(-1, Math.min(1, dy / range));
-      state.tgt.tiltX = ny * -12;
-      state.tgt.tiltY = nx * 16;
-      state.tgt.pullX = nx * inf * 24;
-      state.tgt.pullY = ny * inf * 24;
-    });
-  });
-
-  const EASE = 0.09;
-  gsap.ticker.add(() => {
-    cardStates.forEach(({ cur, tgt }, card) => {
-      cur.pullX += (tgt.pullX - cur.pullX) * EASE;
-      cur.pullY += (tgt.pullY - cur.pullY) * EASE;
-      cur.tiltX += (tgt.tiltX - cur.tiltX) * EASE;
-      cur.tiltY += (tgt.tiltY - cur.tiltY) * EASE;
-      card.style.setProperty("--card-tilt-x", `${cur.tiltX}deg`);
-      card.style.setProperty("--card-tilt-y", `${cur.tiltY}deg`);
-      card.style.setProperty("--card-pull-x", `${cur.pullX}px`);
-      card.style.setProperty("--card-pull-y", `${cur.pullY}px`);
-    });
-  });
-
-  // ── Hover: ASCII → real image ─────────────────────────────────────────────
-  document.querySelectorAll<HTMLElement>(".nav-card").forEach((navCard) => {
-    const ascii = navCard.querySelector<HTMLCanvasElement>(".card-ascii");
-    const img = navCard.querySelector<HTMLImageElement>(".card-img");
-
-    navCard.addEventListener("pointerenter", () => {
-      gsap.to(ascii, { opacity: 0,    duration: 0.5, ease: "power2.out" });
-      gsap.to(img,   { opacity: 1,    duration: 0.5, ease: "power2.out" });
-    });
-    navCard.addEventListener("pointerleave", () => {
-      gsap.to(ascii, { opacity: 0.86, duration: 0.6, ease: "power2.inOut" });
-      gsap.to(img,   { opacity: 0,    duration: 0.6, ease: "power2.inOut" });
-    });
-  });
-
-  // ── Carousel drag ─────────────────────────────────────────────────────────
-  const track = document.querySelector<HTMLElement>(".carousel-track");
-  const viewport = document.querySelector<HTMLElement>(".carousel-viewport");
-  const dots = document.querySelectorAll<HTMLElement>(".dot");
-
-  if (track && viewport) {
-    let currentIndex = 0;
-    let dragging = false;
-    let startX = 0;
-    let startTrackX = 0;
-    let dragDelta = 0;
-    const THRESHOLD = 48;
-
-    const cardWidth = () =>
-      (track.querySelector<HTMLElement>(".nav-card")?.offsetWidth ?? 0);
-
-    const gap = () =>
-      parseFloat(getComputedStyle(track).columnGap) || 24;
-
-    const maxIndex = () =>
-      track.scrollWidth <= viewport.clientWidth
-        ? 0
-        : track.querySelectorAll(".nav-card").length - 1;
-
-    const targetX = (index: number) => -(index * (cardWidth() + gap()));
-
-    const currentX = () => (gsap.getProperty(track, "x") as number) || 0;
-
-    const updateDots = (i: number) =>
-      dots.forEach((d, j) => d.classList.toggle("active", j === i));
-
-    const snapTo = (index: number) => {
-      currentIndex = Math.max(0, Math.min(index, maxIndex()));
-      gsap.to(track, { x: targetX(currentIndex), duration: 0.55, ease: "power3.out" });
-      updateDots(currentIndex);
-    };
-
-    track.addEventListener("pointerdown", (e) => {
-      dragging = true;
-      dragDelta = 0;
-      startX = e.clientX;
-      startTrackX = currentX();
-      track.setPointerCapture(e.pointerId);
-      gsap.killTweensOf(track);
-    });
-
-    track.addEventListener("pointermove", (e) => {
-      if (!dragging) return;
-      const dx = e.clientX - startX;
-      dragDelta = Math.abs(dx);
-      const min = targetX(maxIndex());
-      const raw = startTrackX + dx;
-      const clamped =
-        raw > 0   ? raw * 0.28 :
-        raw < min ? min + (raw - min) * 0.28 :
-        raw;
-      gsap.set(track, { x: clamped });
-    });
-
-    track.addEventListener("pointerup", (e) => {
-      if (!dragging) return;
-      dragging = false;
-      const dx = e.clientX - startX;
-      snapTo(Math.abs(dx) > THRESHOLD
-        ? dx < 0 ? currentIndex + 1 : currentIndex - 1
-        : currentIndex
-      );
-    });
-
-    track.addEventListener("pointercancel", () => {
-      if (dragging) { dragging = false; snapTo(currentIndex); }
-    });
-
-    // Prevent anchor navigation when dragged
-    track.querySelectorAll<HTMLAnchorElement>(".nav-card").forEach((card) => {
-      card.addEventListener("click", (e) => {
-        if (dragDelta > 6) e.preventDefault();
-      });
-    });
-
-    // Snap back on resize
-    window.addEventListener("resize", () => snapTo(currentIndex));
-
-    updateDots(0);
-  }
-
-  // ── Entrance animation ────────────────────────────────────────────────────
-  gsap.from(".nav-card", {
+  gsap.from(scene, {
     scrollTrigger: { trigger: "#pages-nav", start: "top 82%", once: true },
     opacity: 0,
-    y: 56,
-    stagger: 0.14,
-    duration: 0.9,
+    scale: 0.88,
+    duration: 1.0,
     ease: "power3.out",
   });
 
-  // ── Cleanup on Astro navigation ───────────────────────────────────────────
+  // ── Resize ────────────────────────────────────────────────────────────────
+  window.addEventListener("resize", () => {
+    initPositions();
+    applyDepth(ringAngle);
+  });
+
+  // ── Cleanup on page navigation ────────────────────────────────────────────
   document.addEventListener("astro:before-swap", () => {
     asciiCleanups.forEach((fn) => fn());
     asciiCleanups.length = 0;

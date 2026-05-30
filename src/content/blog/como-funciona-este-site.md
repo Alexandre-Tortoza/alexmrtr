@@ -1,0 +1,178 @@
+---
+title: "Como Este Site Funciona"
+description: "Uma visão geral da arquitetura, stack e decisões de design por trás deste portfólio."
+pubDate: 2026-05-30
+tags: ["Astro", "Arquitetura", "FSD", "Three.js", "GSAP", "Tailwind"]
+draft: false
+---
+
+Este post é uma visita guiada pelo código-fonte deste site. Vou explicar a stack, a arquitetura, as features visuais e as decisões de design que moldaram o projeto.
+
+---
+
+## Stack
+
+| Tecnologia | Uso |
+|---|---|
+| **Astro** | SSG — geração estática, zero JS por padrão |
+| **Tailwind CSS v4** | Estilização utilitária, `@theme` com cores customizadas |
+| **Three.js** | Background 3D de partículas (MeshBackground) |
+| **GSAP** | Animações suaves, ticker de interpolação, scroll-trigger |
+| **TypeScript** | Tipagem estrita em todo o código |
+
+Tudo roda em `pnpm dev` para desenvolvimento e `pnpm build` gera `dist/` estático.
+
+---
+
+## Arquitetura: Feature-Sliced Design
+
+O projeto segue [Feature-Sliced Design (FSD)](https://feature-sliced.design) combinado com Clean Architecture. A estrutura de pastas reflete camadas concêntricas:
+
+```
+src/
+├── app/          → Config, layouts, estilos globais
+├── pages/        → Rotas (cada arquivo .astro vira uma URL)
+├── features/     → Casos de uso auto-contidos
+├── entities/     → Tipos de domínio
+├── shared/       → UI primitives, utilitários
+└── content/      → Posts em markdown
+```
+
+A regra de ouro: **camadas externas importam internas, nunca o contrário.** Uma feature nunca importa uma página. Uma entidade nunca importa uma feature.
+
+### Exemplo na prática
+
+O blog está organizado assim:
+
+```
+entities/post/types.ts           → interface PostMeta (domínio)
+features/blog/api/posts.ts       → getPosts(), getPostBySlug() (caso de uso)
+features/blog/ui/PostCard.astro  → componente de card (apresentação)
+pages/blog/index.astro            → página de listagem
+pages/blog/[slug].astro           → página individual
+```
+
+Cada peça tem uma responsabilidade única e pode ser testada, modificada ou substituída isoladamente.
+
+---
+
+## Features Visuais
+
+### MeshBackground (Three.js)
+
+O fundo de partículas é um sistema de pontos em grid 3D:
+
+```typescript
+const geometry = new THREE.BufferGeometry();
+const positions = new Float32Array(totalPoints * 3);
+
+// Cada ponto tem posição, cor e tamanho armazenados em buffers
+```
+
+As partículas ondulam com ondas senoidais e reagem ao mouse — as mais próximas do cursor aumentam de brilho e tamanho. A câmera segue o mouse com interpolação suave via `gsap.ticker`.
+
+Seis cores da paleta `mesh-1` a `mesh-6` (`#1EA7B6`, `#2E828B`, `#00CAE1`, `#305C61`, `#243536`, `#2B3233`) são distribuídas aleatoriamente entre os pontos.
+
+### LavaLampBackground (SVG + GSAP)
+
+Uma segunda camada de background com blobs SVG orgânicos que se movem como lava lamp:
+
+- **Paths gerados proceduralmente** — cada blob é um polígono de 8–12 pontos com raios irregulares, suavizados com curvas bezier
+- **Radial gradient** — centro concentrado (`opacity: 0.4`) → bordas transparentes (`opacity: 0`)
+- **Filtro SVG** — `feGaussianBlur` para bordas suaves + `feTurbulence` para o efeito de ruído granulado
+- **Movimento** — GSAP anima `x`, `y`, `scale` e `rotation` com `sine.inOut` em ciclos aleatórios de 8–18 segundos
+
+### BinaryStars (AboutBackground)
+
+Na seção Sobre, um canvas 2D exibe caracteres `0` e `1` que piscam como estrelas binárias — uma referência sutil ao tema de tecnologia.
+
+---
+
+## Sistema de Design
+
+### Cores
+
+```css
+@theme {
+  --color-mesh-1: #1ea7b6;  /* ciano principal */
+  --color-mesh-2: #2e828b;
+  --color-mesh-3: #00cae1;
+  --color-mesh-4: #305c61;
+  --color-mesh-5: #243536;
+  --color-mesh-6: #2b3233;
+}
+```
+
+O tema escuro (`bg-primary: #0a0a0a`) é o padrão. O tema claro alterna para fundo claro mantendo o mesmo acento ciano.
+
+### Tipografia
+
+JetBrains Mono como fonte principal — monospace ao longo de todo o site, reforçando a estética de desenvolvedor.
+
+### Glassmorphism
+
+Cards e containers usam o padrão:
+
+```css
+border-white/5 bg-white/[0.03] backdrop-blur-md
+```
+
+Isso cria o efeito de vidro fosco que aparece nas seções Sobre, Skills e nos cards do blog.
+
+---
+
+## Content Collections (Blog)
+
+Os posts são gerenciados via Content Collections do Astro com schema validado por Zod:
+
+```typescript
+const blog = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.md", base: "./src/content/blog" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.date(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+```
+
+Para renderizar um post, usa-se `render(entry)` do `astro:content`:
+
+```typescript
+import { getCollection, render } from "astro:content";
+
+const entries = await getCollection("blog");
+const { Content } = await render(entry);
+```
+
+Posts marcados como `draft: true` não aparecem em produção — útil para rascunhos.
+
+---
+
+## Princípios de Código
+
+O projeto segue alguns princípios simples:
+
+- **Componentes pequenos** — ~50–100 linhas, uma responsabilidade cada
+- **Sem barrel files** — imports explícitos de cada arquivo
+- **DRY com cautela** — duplicação é aceitável temporariamente; extrair só na 3ª repetição
+- **Comentários só para o *porquê*** — o código deve ser auto-explicativo
+- **Conventional Commits** — `feat:`, `fix:`, `refactor:`, etc.
+
+---
+
+## O Que Vem Por Aí
+
+O roadmap inclui:
+
+- **i18n** — suporte a múltiplos idiomas com dicionário customizado
+- **Testes** — Vitest + Testing Library para testes unitários e de componente
+- **Páginas de projetos** — galeria com card grid e filtros
+- **Galeria de fotos** — lightbox com navegação
+- **Performance** — Lighthouse 100, Open Graph, sitemap, RSS
+
+---
+
+O código-fonte completo está disponível em [github.com/anomalyco/alexmrtr](https://github.com/anomalyco/alexmrtr). Sinta-se à vontade para explorar, abrir issues ou sugerir melhorias.

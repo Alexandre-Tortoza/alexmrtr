@@ -1,0 +1,28 @@
+---
+---
+
+<canvas
+  id="stardust-bg"
+  class="fixed inset-0 -z-20 h-full w-full pointer-events-none bg-[#0a0a0a] opacity-10"
+></canvas>
+
+<script>
+  import { createStardust } from "./stardust.ts";
+
+  function init() {
+    const canvas = document.getElementById("stardust-bg");
+    if (canvas instanceof HTMLCanvasElement) {
+      const cleanup = createStardust(canvas);
+
+      document.addEventListener("astro:before-swap", () => {
+        if (cleanup) cleanup();
+      }, { once: true });
+    }
+  }
+
+  // Initialize on first load
+  init();
+
+  // Re-initialize after Astro navigation
+  document.addEventListener("astro:after-swap", init);
+</script>

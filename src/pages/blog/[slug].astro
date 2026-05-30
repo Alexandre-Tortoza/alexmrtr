@@ -1,0 +1,151 @@
+---
+import BaseLayout from "../../app/layouts/BaseLayout.astro";
+import { formatDateFull } from "../../features/blog/api/posts.ts";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("blog");
+  return entries
+    .filter((e) => (import.meta.env.PROD ? !e.data.draft : true))
+    .map((entry) => ({
+      params: { slug: entry.id.replace(/\.md$/, "") },
+      props: { entry },
+    }));
+}
+
+interface Props {
+  entry: import("astro:content").CollectionEntry<"blog">;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={`${entry.data.title} — Alexandre Tortoza`} description={entry.data.description}>
+  <article class="py-16 lg:py-24">
+    <header class="mb-12 max-w-3xl">
+      <a
+        href="/blog"
+        class="mb-6 inline-flex items-center gap-1 text-[10px] tracking-wider text-white/40 transition-colors hover:text-white/70 uppercase"
+      >
+        ← Voltar ao blog
+      </a>
+
+      <h1 class="text-lg font-bold text-white/90 lg:text-xl">
+        {entry.data.title}
+      </h1>
+
+      <div class="mt-3 flex flex-wrap items-center gap-3 text-[10px] tracking-wider text-white/40 uppercase">
+        <time datetime={entry.data.pubDate.toISOString()}>
+          {formatDateFull(entry.data.pubDate)}
+        </time>
+
+        {entry.data.tags.length > 0 && (
+          <>
+            <span>·</span>
+            {entry.data.tags.map((tag) => (
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-0.5 text-[9px] text-white/50">
+                {tag}
+              </span>
+            ))}
+          </>
+        )}
+      </div>
+    </header>
+
+    <div class="prose-custom max-w-3xl text-sm leading-relaxed text-white/70">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .prose-custom :global(h2) {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .prose-custom :global(h3) {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .prose-custom :global(p) {
+    margin-bottom: 1rem;
+    line-height: 1.75;
+  }
+
+  .prose-custom :global(code) {
+    padding: 0.15em 0.4em;
+    border-radius: 0.25rem;
+    background: rgba(255, 255, 255, 0.06);
+    font-size: 0.8em;
+    color: #1ea7b6;
+  }
+
+  .prose-custom :global(pre) {
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+  }
+
+  .prose-custom :global(pre code) {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.75rem;
+    line-height: 1.6;
+  }
+
+  .prose-custom :global(a) {
+    color: #1ea7b6;
+    text-decoration: underline;
+    text-decoration-color: rgba(30, 167, 182, 0.3);
+    transition: text-decoration-color 0.2s;
+  }
+
+  .prose-custom :global(a:hover) {
+    text-decoration-color: rgba(30, 167, 182, 0.8);
+  }
+
+  .prose-custom :global(ul),
+  .prose-custom :global(ol) {
+    margin-bottom: 1rem;
+    padding-left: 1.25rem;
+  }
+
+  .prose-custom :global(li) {
+    margin-bottom: 0.25rem;
+    line-height: 1.75;
+  }
+
+  .prose-custom :global(hr) {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .prose-custom :global(blockquote) {
+    margin: 1rem 0;
+    border-left: 2px solid rgba(30, 167, 182, 0.4);
+    padding-left: 1rem;
+    color: rgba(255, 255, 255, 0.55);
+    font-style: italic;
+  }
+
+  .prose-custom :global(img) {
+    max-width: 100%;
+    border-radius: 0.25rem;
+    margin: 1.5rem 0;
+  }
+</style>
