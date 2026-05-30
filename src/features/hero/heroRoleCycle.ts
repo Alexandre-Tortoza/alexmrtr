@@ -1,6 +1,6 @@
 import gsap from "gsap";
 
-const ROLES = ["Desenvolvedor", "Front-end", "Back-end", "Web Designer", "Fullstack"];
+const ROLES = ["Programador", "Front-end", "Back-end", "Web Designer", "Fullstack"];
 const PRIMARY = "#1ea7b6";
 const INTERVAL = 3.5;
 

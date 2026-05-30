@@ -1,0 +1,356 @@
+---
+import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg";
+
+const cards = [
+  {
+    href: "/photos",
+    label: "Galeria",
+    desc: "Fotografia e momentos",
+    image: penguinsImage.src,
+    floatDelay: "0s",
+    shineDelay: "0s",
+  },
+  {
+    href: "/blog",
+    label: "Blog",
+    desc: "Artigos e anotações",
+    image: penguinsImage.src,
+    floatDelay: "-2.7s",
+    shineDelay: "-2.7s",
+  },
+  {
+    href: "/projects",
+    label: "Projetos",
+    desc: "O que estou construindo",
+    image: penguinsImage.src,
+    floatDelay: "-5.3s",
+    shineDelay: "-5.3s",
+  },
+];
+---
+
+<section id="pages-nav" class="py-24 4xl:py-32">
+  <h2
+    data-aos="fade-up"
+    class="mb-12 text-xs tracking-[0.3em] uppercase text-mesh-1 2xl:text-sm 4xl:text-base"
+  >
+    Explore
+  </h2>
+
+  <div class="carousel-viewport overflow-hidden">
+    <div class="carousel-track flex gap-6 will-change-transform select-none">
+      {cards.map((card, i) => (
+        <a
+          href={card.href}
+          class="nav-card group relative flex-none"
+          data-index={i}
+          draggable="false"
+        >
+          <div
+            class="card-3d relative w-full overflow-hidden rounded-sm border border-white/10 bg-[var(--bg-primary)] cursor-pointer"
+            style={`animation-delay: ${card.floatDelay}`}
+          >
+            <img
+              src={card.image}
+              alt={card.label}
+              class="card-img pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
+              draggable="false"
+            />
+
+            <canvas
+              class="card-ascii pointer-events-none absolute inset-0 h-full w-full"
+              data-src={card.image}
+            />
+
+            <div class="card-overlay absolute inset-0 z-10 flex flex-col justify-end p-5 2xl:p-7 4xl:p-9">
+              <span class="mb-1 text-[10px] tracking-[0.25em] uppercase text-mesh-1 2xl:text-xs 4xl:text-sm">
+                {card.label}
+              </span>
+              <p class="text-sm leading-snug text-white/50 2xl:text-base 4xl:text-lg">
+                {card.desc}
+              </p>
+            </div>
+
+            <div
+              class="card-shine pointer-events-none absolute inset-[-45%] z-20"
+              style={`animation-delay: ${card.shineDelay}`}
+            />
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <div class="carousel-dots mt-8 flex justify-center gap-2 md:hidden" aria-hidden="true">
+    {cards.map((_, i) => (
+      <span
+        class="dot h-1.5 rounded-full bg-white/20 transition-all duration-300"
+        data-dot={i}
+      />
+    ))}
+  </div>
+</section>
+
+<style>
+  .nav-card {
+    width: calc(33.333% - 1rem);
+  }
+
+  @media (max-width: 767px) {
+    .nav-card {
+      width: 82%;
+    }
+  }
+
+  /* Aspect ratio via padding-bottom trick so the card has height */
+  .card-3d {
+    aspect-ratio: 3 / 2;
+
+    --card-tilt-x: 0deg;
+    --card-tilt-y: 0deg;
+    --card-pull-x: 0px;
+    --card-pull-y: 0px;
+
+    transform: translate3d(var(--card-pull-x), var(--card-pull-y), 0)
+      perspective(900px)
+      rotateX(var(--card-tilt-x))
+      rotateY(var(--card-tilt-y));
+    transform-style: preserve-3d;
+    transition: box-shadow 600ms ease;
+    animation: nav-float 8s ease-in-out infinite;
+    box-shadow: 0 22px 70px rgb(0 0 0 / 0.24);
+    will-change: transform, translate;
+  }
+
+  .card-3d:hover {
+    box-shadow:
+      0 28px 90px rgb(0 0 0 / 0.34),
+      0 0 38px rgb(30 167 182 / 0.08);
+  }
+
+  .card-overlay {
+    background: linear-gradient(to top, rgb(0 0 0 / 0.72) 0%, transparent 55%);
+  }
+
+  .card-shine {
+    background: linear-gradient(
+      115deg,
+      transparent 38%,
+      rgb(255 255 255 / 0.06) 44%,
+      rgb(30 167 182 / 0.24) 50%,
+      rgb(255 255 255 / 0.08) 56%,
+      transparent 64%
+    );
+    transform: translateX(-45%) rotate(8deg);
+    animation: nav-shine 8s ease-in-out infinite;
+  }
+
+  @keyframes nav-float {
+    0%, 100% { translate: 0 0; }
+    50%       { translate: 0 -10px; }
+  }
+
+  @keyframes nav-shine {
+    0%, 45%  { opacity: 0; transform: translateX(-45%) rotate(8deg); }
+    55%      { opacity: 1; }
+    100%     { opacity: 0; transform: translateX(45%) rotate(8deg); }
+  }
+
+  .dot {
+    width: 0.375rem;
+  }
+
+  .dot.active {
+    background-color: rgb(30 167 182);
+    width: 1.25rem;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { createAsciiArt } from "../ascii-art/asciiArt.ts";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── ASCII art ─────────────────────────────────────────────────────────────
+  const asciiCleanups: (() => void)[] = [];
+
+  document.querySelectorAll<HTMLCanvasElement>(".card-ascii").forEach((canvas) => {
+    createAsciiArt(canvas, canvas.dataset.src!, {
+      fontSize: 14,
+      artStyle: "classic",
+      colorMode: "fullcolor",
+      ditherStrength: 0,
+    }).then((stop) => asciiCleanups.push(stop));
+  });
+
+  // ── 3D tilt per card ──────────────────────────────────────────────────────
+  interface TiltState {
+    pullX: number; pullY: number; tiltX: number; tiltY: number;
+  }
+
+  const cardStates = new Map<HTMLElement, { cur: TiltState; tgt: TiltState }>();
+
+  document.querySelectorAll<HTMLElement>(".card-3d").forEach((card) => {
+    const state = {
+      cur: { pullX: 0, pullY: 0, tiltX: 0, tiltY: 0 },
+      tgt: { pullX: 0, pullY: 0, tiltX: 0, tiltY: 0 },
+    };
+    cardStates.set(card, state);
+
+    const reset = () => {
+      state.tgt.pullX = state.tgt.pullY = state.tgt.tiltX = state.tgt.tiltY = 0;
+    };
+
+    card.addEventListener("pointerenter", () => {});
+    card.addEventListener("pointerleave", reset);
+    card.addEventListener("pointermove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const dx = e.clientX - (rect.left + rect.width / 2);
+      const dy = e.clientY - (rect.top + rect.height / 2);
+      const range = Math.min(rect.width, rect.height) * 1.2;
+      const dist = Math.hypot(dx, dy);
+      if (dist > range) { reset(); return; }
+      const inf = 1 - dist / range;
+      const nx = Math.max(-1, Math.min(1, dx / range));
+      const ny = Math.max(-1, Math.min(1, dy / range));
+      state.tgt.tiltX = ny * -12;
+      state.tgt.tiltY = nx * 16;
+      state.tgt.pullX = nx * inf * 24;
+      state.tgt.pullY = ny * inf * 24;
+    });
+  });
+
+  const EASE = 0.09;
+  gsap.ticker.add(() => {
+    cardStates.forEach(({ cur, tgt }, card) => {
+      cur.pullX += (tgt.pullX - cur.pullX) * EASE;
+      cur.pullY += (tgt.pullY - cur.pullY) * EASE;
+      cur.tiltX += (tgt.tiltX - cur.tiltX) * EASE;
+      cur.tiltY += (tgt.tiltY - cur.tiltY) * EASE;
+      card.style.setProperty("--card-tilt-x", `${cur.tiltX}deg`);
+      card.style.setProperty("--card-tilt-y", `${cur.tiltY}deg`);
+      card.style.setProperty("--card-pull-x", `${cur.pullX}px`);
+      card.style.setProperty("--card-pull-y", `${cur.pullY}px`);
+    });
+  });
+
+  // ── Hover: ASCII → real image ─────────────────────────────────────────────
+  document.querySelectorAll<HTMLElement>(".nav-card").forEach((navCard) => {
+    const ascii = navCard.querySelector<HTMLCanvasElement>(".card-ascii");
+    const img = navCard.querySelector<HTMLImageElement>(".card-img");
+
+    navCard.addEventListener("pointerenter", () => {
+      gsap.to(ascii, { opacity: 0,    duration: 0.5, ease: "power2.out" });
+      gsap.to(img,   { opacity: 1,    duration: 0.5, ease: "power2.out" });
+    });
+    navCard.addEventListener("pointerleave", () => {
+      gsap.to(ascii, { opacity: 0.86, duration: 0.6, ease: "power2.inOut" });
+      gsap.to(img,   { opacity: 0,    duration: 0.6, ease: "power2.inOut" });
+    });
+  });
+
+  // ── Carousel drag ─────────────────────────────────────────────────────────
+  const track = document.querySelector<HTMLElement>(".carousel-track");
+  const viewport = document.querySelector<HTMLElement>(".carousel-viewport");
+  const dots = document.querySelectorAll<HTMLElement>(".dot");
+
+  if (track && viewport) {
+    let currentIndex = 0;
+    let dragging = false;
+    let startX = 0;
+    let startTrackX = 0;
+    let dragDelta = 0;
+    const THRESHOLD = 48;
+
+    const cardWidth = () =>
+      (track.querySelector<HTMLElement>(".nav-card")?.offsetWidth ?? 0);
+
+    const gap = () =>
+      parseFloat(getComputedStyle(track).columnGap) || 24;
+
+    const maxIndex = () =>
+      track.scrollWidth <= viewport.clientWidth
+        ? 0
+        : track.querySelectorAll(".nav-card").length - 1;
+
+    const targetX = (index: number) => -(index * (cardWidth() + gap()));
+
+    const currentX = () => (gsap.getProperty(track, "x") as number) || 0;
+
+    const updateDots = (i: number) =>
+      dots.forEach((d, j) => d.classList.toggle("active", j === i));
+
+    const snapTo = (index: number) => {
+      currentIndex = Math.max(0, Math.min(index, maxIndex()));
+      gsap.to(track, { x: targetX(currentIndex), duration: 0.55, ease: "power3.out" });
+      updateDots(currentIndex);
+    };
+
+    track.addEventListener("pointerdown", (e) => {
+      dragging = true;
+      dragDelta = 0;
+      startX = e.clientX;
+      startTrackX = currentX();
+      track.setPointerCapture(e.pointerId);
+      gsap.killTweensOf(track);
+    });
+
+    track.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      dragDelta = Math.abs(dx);
+      const min = targetX(maxIndex());
+      const raw = startTrackX + dx;
+      const clamped =
+        raw > 0   ? raw * 0.28 :
+        raw < min ? min + (raw - min) * 0.28 :
+        raw;
+      gsap.set(track, { x: clamped });
+    });
+
+    track.addEventListener("pointerup", (e) => {
+      if (!dragging) return;
+      dragging = false;
+      const dx = e.clientX - startX;
+      snapTo(Math.abs(dx) > THRESHOLD
+        ? dx < 0 ? currentIndex + 1 : currentIndex - 1
+        : currentIndex
+      );
+    });
+
+    track.addEventListener("pointercancel", () => {
+      if (dragging) { dragging = false; snapTo(currentIndex); }
+    });
+
+    // Prevent anchor navigation when dragged
+    track.querySelectorAll<HTMLAnchorElement>(".nav-card").forEach((card) => {
+      card.addEventListener("click", (e) => {
+        if (dragDelta > 6) e.preventDefault();
+      });
+    });
+
+    // Snap back on resize
+    window.addEventListener("resize", () => snapTo(currentIndex));
+
+    updateDots(0);
+  }
+
+  // ── Entrance animation ────────────────────────────────────────────────────
+  gsap.from(".nav-card", {
+    scrollTrigger: { trigger: "#pages-nav", start: "top 82%", once: true },
+    opacity: 0,
+    y: 56,
+    stagger: 0.14,
+    duration: 0.9,
+    ease: "power3.out",
+  });
+
+  // ── Cleanup on Astro navigation ───────────────────────────────────────────
+  document.addEventListener("astro:before-swap", () => {
+    asciiCleanups.forEach((fn) => fn());
+    asciiCleanups.length = 0;
+    cardStates.clear();
+  });
+</script>

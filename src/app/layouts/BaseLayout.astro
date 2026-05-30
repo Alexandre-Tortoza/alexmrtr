@@ -1,6 +1,7 @@
 ---
 import "aos/dist/aos.css";
 import "../styles/globals.css";
+import LavaLampBackground from "../../features/lava-lamp-background/LavaLampBackground.astro";
 import MeshBackground from "../../features/mesh-background/MeshBackground.astro";
 import Navbar from "../../features/navbar/Navbar.astro";
 
@@ -9,7 +10,7 @@ export interface Props {
   description?: string;
 }
 
-const { title = "Alexandre Tortoza", description = "Desenvolvedor" } =
+const { title = "Alexandre Tortoza", description = "Programador" } =
   Astro.props;
 ---
 
@@ -23,18 +24,19 @@ const { title = "Alexandre Tortoza", description = "Desenvolvedor" } =
   </head>
   <body class="relative min-h-screen overflow-x-hidden">
     <MeshBackground />
+    <LavaLampBackground />
 
     <Navbar />
 
     <div class="relative z-10 flex min-h-screen flex-col">
-      <main class="mx-auto w-full max-w-6xl flex-1 px-6 lg:px-10">
+      <main class="mx-auto w-full max-w-6xl flex-1 px-6 lg:px-10 2xl:max-w-7xl 3xl:max-w-[1600px] 4xl:max-w-[2100px]">
         <slot />
       </main>
 
-      <footer class="mt-24 border-t border-white/5 py-20 lg:py-32">
+      <footer class="mt-24 border-t border-white/5 py-10 lg:py-16">
         <div class="mx-auto max-w-6xl px-6 text-center text-[10px] tracking-wider text-white/30 uppercase lg:px-10">
           <p>
-            Exceto onde otherwise notado, este site está licenciado sob
+            Este site está licenciado sob
             <a
               href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
               target="_blank"

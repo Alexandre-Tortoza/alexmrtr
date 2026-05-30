@@ -7,6 +7,8 @@
   --color-mesh-4: #305c61;
   --color-mesh-5: #243536;
   --color-mesh-6: #2b3233;
+  --breakpoint-3xl: 1920px;
+  --breakpoint-4xl: 2440px;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
