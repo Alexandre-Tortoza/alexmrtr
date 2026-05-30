@@ -167,11 +167,29 @@ const cards = [
     inset: 0;
   }
 
+  /* ── Inactive card: opaque glass overlay (hidden when active) ───────────── */
+  .card-3d::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: rgb(10 10 10 / 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    pointer-events: none;
+    transition: opacity 0.55s ease;
+  }
+
+  .nav-card.is-active .card-3d::before {
+    opacity: 0;
+  }
+
   /* ── iframe page preview ─────────────────────────────────────────────────── */
   .card-iframe-wrapper {
     position: absolute;
     inset: 0;
     overflow: hidden;
+    opacity: 0;
     pointer-events: none;
   }
 
@@ -296,6 +314,9 @@ const cards = [
     });
 
     dots.forEach((d, j) => d.classList.toggle("active", j === currentIndex));
+
+    const active = navCards[currentIndex];
+    if (active) setFocus(active);
   }
 
   // ── Drag ─────────────────────────────────────────────────────────────────
@@ -320,7 +341,7 @@ const cards = [
     if (!dragging) return;
     const dx  = e.clientX - startX;
     dragDelta = Math.abs(dx);
-    ringAngle = startAngle - dx * SENS;
+    ringAngle = startAngle + dx * SENS;
     dragUpdate(ringAngle);
   });
 
@@ -454,20 +475,36 @@ const cards = [
     });
   });
 
-  // ── Load iframes immediately on section enter ────────────────────────────
-  const iframeObserver = new IntersectionObserver(([entry]) => {
-    if (!entry.isIntersecting) return;
-    iframeObserver.disconnect();
-    document.querySelectorAll<HTMLIFrameElement>(".card-iframe").forEach((iframe) => {
-      iframe.src = iframe.dataset.src!;
-    });
-  }, { threshold: 0.1 });
-  iframeObserver.observe(document.getElementById("pages-nav")!);
+  // ── Focused card: load iframe on demand + fade in/out ────────────────────
+  let focusedCard: HTMLElement | null = null;
+
+  function setFocus(navCard: HTMLElement) {
+    if (focusedCard === navCard) return;
+
+    // Fade out previous
+    if (focusedCard) {
+      const prev = focusedCard.querySelector<HTMLElement>(".card-iframe-wrapper")!;
+      gsap.to(prev, { opacity: 0, duration: 0.35, ease: "power2.in" });
+    }
+
+    // Load iframe on first focus
+    const iframe = navCard.querySelector<HTMLIFrameElement>(".card-iframe")!;
+    if (iframe.dataset.src && !iframe.src) {
+      iframe.src = iframe.dataset.src;
+    }
+
+    // Fade in
+    const next = navCard.querySelector<HTMLElement>(".card-iframe-wrapper")!;
+    gsap.to(next, { opacity: 1, duration: 0.55, ease: "power2.out" });
+
+    focusedCard = navCard;
+  }
 
   // ── Init + ScrollTrigger entrance ────────────────────────────────────────
   initPositions();
   applyDepth(0);
   gsap.set(ring, { rotateY: 0, transformStyle: "preserve-3d" });
+  setFocus(navCards[0]);
 
   gsap.from(scene, {
     scrollTrigger: { trigger: "#pages-nav", start: "top 82%", once: true },
