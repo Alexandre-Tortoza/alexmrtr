@@ -23,9 +23,16 @@ import photos from "../../features/gallery/data/photos.json";
         Fotografia e momentos
       </h1>
     </div>
+    <button
+      id="clear-gallery"
+      class="absolute top-6 right-6 z-50 rounded-sm border border-white/10 bg-white/5 px-4 py-2 text-[10px] uppercase tracking-wider text-white/80 backdrop-blur-sm transition-colors hover:bg-white/10"
+    >
+      Limpar Coleção
+    </button>
   </div>
 
   <section class="py-16 lg:py-24">
+    {/* NOTE: Implement virtual scrolling here to prevent DOM overload as the gallery grows */}
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {photos.map((photo) => (
         <PhotoCard
@@ -38,6 +45,18 @@ import photos from "../../features/gallery/data/photos.json";
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const clearBtn = document.getElementById("clear-gallery");
+  clearBtn?.addEventListener("click", () => {
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('photo-unlocked-')) {
+        localStorage.removeItem(key);
+      }
+    });
+    location.reload();
+  });
+</script>
 
 <style>
   .page-hero {
