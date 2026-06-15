@@ -1,0 +1,162 @@
+---
+export interface PhotoData {
+  id: string;
+  title: string;
+  description: string;
+  src: string;
+}
+
+export interface Props {
+  photos: PhotoData[];
+}
+
+const { photos } = Astro.props;
+---
+
+<style is:global>
+  .vcard-skeleton {
+    background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+    background-size: 200% 100%;
+    animation: vcard-shimmer 1.5s ease-in-out infinite;
+  }
+  @keyframes vcard-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .vcard-shine {
+    background: linear-gradient(
+      115deg,
+      transparent 38%,
+      rgb(255 255 255 / 0.06) 44%,
+      rgb(30 167 182 / 0.24) 50%,
+      rgb(255 255 255 / 0.08) 56%,
+      transparent 64%
+    );
+    transform: translateX(-45%) rotate(8deg);
+    animation: vcard-shine-anim 8s ease-in-out infinite;
+  }
+  @keyframes vcard-shine-anim {
+    0%, 45% { opacity: 0; transform: translateX(-45%) rotate(8deg); }
+    55% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(45%) rotate(8deg); }
+  }
+  .photo-wrapper {
+    content-visibility: auto;
+    contain: layout style paint;
+  }
+</style>
+
+<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  {photos.map((photo) => (
+    <div
+      class="photo-wrapper group relative aspect-[4/3] overflow-hidden rounded-sm border border-white/10 bg-black cursor-pointer"
+      data-id={photo.id}
+      data-src={photo.src}
+    >
+      <div class="vcard-skeleton absolute inset-0 z-5"></div>
+      <canvas
+        class="photo-ascii absolute inset-0 h-full w-full z-20 transition-opacity duration-700"
+      ></canvas>
+      <img
+        class="photo-img absolute inset-0 h-full w-full object-cover z-0 opacity-0 transition-opacity duration-700"
+        alt={photo.title}
+        src={photo.src}
+        loading="lazy"
+      />
+      <div
+        class="absolute inset-0 z-30 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      >
+        <div class="absolute bottom-0 left-0 p-5">
+          <p class="text-[10px] tracking-[0.2em] uppercase text-mesh-1 mb-1">{photo.title}</p>
+          <p class="text-xs text-white/60 line-clamp-1">{photo.description}</p>
+        </div>
+      </div>
+      <div
+        class="vcard-shine pointer-events-none absolute inset-[-45%] z-20"
+      ></div>
+    </div>
+  ))}
+</div>
+
+<script>
+  import { createAsciiArt } from "../../ascii-art/asciiArt";
+  import gsap from "gsap";
+
+  const cards = document.querySelectorAll(".photo-wrapper");
+
+  const initCard = (card) => {
+    if (card.dataset.initialized === "true") return;
+    card.dataset.initialized = "true";
+
+    const id = card.dataset.id;
+    const src = card.dataset.src;
+    const canvas = card.querySelector(".photo-ascii");
+    const skeleton = card.querySelector(".vcard-skeleton");
+    const shine = card.querySelector(".vcard-shine");
+    const img = card.querySelector(".photo-img");
+
+    let cleanupAscii = null;
+
+    const unlock = () => {
+      localStorage.setItem("photo-unlocked-" + id, "true");
+
+      gsap.to(canvas, {
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.inOut",
+        onComplete: () => { if (cleanupAscii) cleanupAscii(); },
+      });
+      gsap.to(shine, { opacity: 0, duration: 0.8, ease: "power2.inOut" });
+      gsap.to(img, { opacity: 1, duration: 0.8, ease: "power2.inOut" });
+    };
+
+    const isUnlocked = localStorage.getItem("photo-unlocked-" + id) === "true";
+
+    if (isUnlocked) {
+      skeleton.remove();
+      gsap.set(canvas, { opacity: 0, visibility: "hidden" });
+      gsap.set(shine, { opacity: 0 });
+      gsap.set(img, { opacity: 1 });
+      return;
+    }
+
+    createAsciiArt(canvas, src, {
+      fontSize: 24,
+      artStyle: "classic",
+      colorMode: "fullcolor",
+      brightness: 0,
+      contrast: 0,
+    })
+      .then((cleanup) => {
+        cleanupAscii = cleanup;
+        gsap.to(skeleton, { opacity: 0, duration: 0.3, onComplete: () => skeleton.remove() });
+      })
+      .catch(() => { skeleton.remove(); });
+
+    card.addEventListener(
+      "click",
+      function () {
+        if (localStorage.getItem("photo-unlocked-" + id) !== "true") {
+          unlock();
+        }
+      },
+      { once: true },
+    );
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          initCard(entry.target);
+          observer.unobserve(entry.target);
+        }
+      }
+    },
+    { rootMargin: "200px" },
+  );
+
+  for (const card of cards) {
+    observer.observe(card);
+  }
+</script>

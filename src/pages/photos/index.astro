@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../app/layouts/BaseLayout.astro";
-import PhotoCard from "../../features/gallery/ui/PhotoCard.astro";
+import VirtualGallery from "../../features/gallery/ui/VirtualGallery.astro";
 import photos from "../../features/gallery/data/photos.json";
 ---
 
@@ -8,9 +8,11 @@ import photos from "../../features/gallery/data/photos.json";
   title="Galeria — Alexandre Tortoza"
   description="Registros fotográficos e momentos."
 >
-  <div class="page-hero relative mt-20 h-[55vh] w-full overflow-hidden rounded-sm border border-white/10">
+  <div
+    class="page-hero relative mt-20 h-[55vh] w-full overflow-hidden rounded-sm border border-white/10"
+  >
     <img
-      src="/gallery/penguins.jpg"
+      src="/gallery/2b52af09-06ae-4cd6-8ac3-2d8808388a93.JPG"
       alt="Galeria"
       class="h-full w-full object-cover"
     />
@@ -32,25 +34,15 @@ import photos from "../../features/gallery/data/photos.json";
   </div>
 
   <section class="py-16 lg:py-24">
-    {/* NOTE: Implement virtual scrolling here to prevent DOM overload as the gallery grows */}
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {photos.map((photo) => (
-        <PhotoCard
-          id={photo.id}
-          title={photo.title}
-          description={photo.description}
-          src={photo.src}
-        />
-      ))}
-    </div>
+    <VirtualGallery photos={photos} />
   </section>
 </BaseLayout>
 
 <script>
   const clearBtn = document.getElementById("clear-gallery");
   clearBtn?.addEventListener("click", () => {
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('photo-unlocked-')) {
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("photo-unlocked-")) {
         localStorage.removeItem(key);
       }
     });

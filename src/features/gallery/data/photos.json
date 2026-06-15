@@ -1,44 +1,212 @@
 [
   {
-    "id": "penguins-1",
-    "title": "Antártida",
-    "description": "Momentos no gelo.",
-    "src": "/gallery/penguins.jpg",
-    "date": "2026-05-30"
+    "id": "retrato-1",
+    "title": "Lago ao Entardecer 1",
+    "description": "Pôr do sol sobre o lago, cidade refletida na água.",
+    "src": "/gallery/lago-entardecer-1.jpeg",
+    "date": "2024-01-14"
   },
   {
-    "id": "penguins-2",
-    "title": "Exploração",
-    "description": "Caminhada matinal.",
-    "src": "/gallery/penguins.jpg",
-    "date": "2026-05-28"
+    "id": "retrato-2",
+    "title": "Lago ao Entardecer 2",
+    "description": "Roda-gigante iluminada no fim do dia.",
+    "src": "/gallery/lago-entardecer-2.jpeg",
+    "date": "2024-01-14"
   },
   {
-    "id": "penguins-3",
-    "title": "Horizonte",
-    "description": "Onde o gelo encontra o céu.",
-    "src": "/gallery/penguins.jpg",
-    "date": "2026-05-25"
+    "id": "curitiba-1",
+    "title": "Pôr do Sol 1",
+    "description": "Nuvens roxas e laranjadas no entardecer.",
+    "src": "/gallery/por-do-sol-1.jpeg",
+    "date": "2024-01-15"
   },
   {
-    "id": "penguins-4",
-    "title": "Comunidade",
-    "description": "Juntos no frio.",
-    "src": "/gallery/penguins.jpg",
-    "date": "2026-05-20"
+    "id": "curitiba-2",
+    "title": "Pôr do Sol 2",
+    "description": "Céu em chamas, árvores e lago ao fundo.",
+    "src": "/gallery/por-do-sol-2.jpeg",
+    "date": "2024-01-15"
   },
   {
-    "id": "penguins-5",
-    "title": "Pausa",
-    "description": "Descanso necessário.",
-    "src": "/gallery/penguins.jpg",
-    "date": "2026-05-15"
+    "id": "curitiba-3",
+    "title": "Pôr do Sol 3",
+    "description": "Silhueta de eucaliptos contra o céu colorido.",
+    "src": "/gallery/por-do-sol-3.jpeg",
+    "date": "2024-01-15"
   },
   {
-    "id": "penguins-6",
-    "title": "Partida",
-    "description": "Rumo ao desconhecido.",
-    "src": "/gallery/penguins.jpg",
-    "date": "2026-05-10"
+    "id": "ceu-1",
+    "title": "Campo ao Entardecer",
+    "description": "Pôr do sol sobre o campo aberto, margem do lago ao fundo.",
+    "src": "/gallery/campo-entardecer.jpeg",
+    "date": "2024-02-11"
+  },
+  {
+    "id": "ceu-2",
+    "title": "Céu de Inverno 1",
+    "description": "Manhã de junho.",
+    "src": "/gallery/ceu-inverno-1.heic",
+    "date": "2024-06-15"
+  },
+  {
+    "id": "ceu-3",
+    "title": "Pedras no Mar",
+    "description": "Pedras na beira-mar sob céu azul claro.",
+    "src": "/gallery/pedras-no-mar.jpeg",
+    "date": "2024-06-15"
+  },
+  {
+    "id": "ceu-4",
+    "title": "Céu de Inverno 2",
+    "description": "Meio-dia de inverno.",
+    "src": "/gallery/ceu-inverno-2.heic",
+    "date": "2024-06-15"
+  },
+  {
+    "id": "ceu-5",
+    "title": "Céu de Inverno 3",
+    "description": "Tarde azul de junho.",
+    "src": "/gallery/ceu-inverno-3.heic",
+    "date": "2024-06-16"
+  },
+  {
+    "id": "ceu-6",
+    "title": "Céu de Inverno 4",
+    "description": "Fim de tarde de inverno.",
+    "src": "/gallery/ceu-inverno-4.heic",
+    "date": "2024-06-16"
+  },
+  {
+    "id": "ceu-7",
+    "title": "Céu de Inverno 5",
+    "description": "Pôr do sol de junho.",
+    "src": "/gallery/ceu-inverno-5.heic",
+    "date": "2024-06-16"
+  },
+  {
+    "id": "praia-1",
+    "title": "Praia com Falésia",
+    "description": "Sol forte, mar cintilante e promontório em Florianópolis.",
+    "src": "/gallery/praia-falesia-1.jpeg",
+    "date": "2024-11-16"
+  },
+  {
+    "id": "praia-2",
+    "title": "Praia com Sol",
+    "description": "Reflexo do sol nas águas em Florianópolis.",
+    "src": "/gallery/praia-sol.jpeg",
+    "date": "2024-11-16"
+  },
+  {
+    "id": "praia-3",
+    "title": "Costa de Pedras",
+    "description": "Mar turquesa e rochas com vegetação em Florianópolis.",
+    "src": "/gallery/costa-pedras.jpeg",
+    "date": "2024-11-16"
+  },
+  {
+    "id": "lagoa-1",
+    "title": "Mar Encoberto",
+    "description": "Sol entre nuvens carregadas sobre o mar aberto.",
+    "src": "/gallery/mar-encoberto.jpeg",
+    "date": "2024-11-16"
+  },
+  {
+    "id": "mar-1",
+    "title": "Luz entre Folhas",
+    "description": "Luz do sol filtrada pelas árvores à beira d'água.",
+    "src": "/gallery/luz-entre-folhas.jpeg",
+    "date": "2024-11-17"
+  },
+  {
+    "id": "ceu-8",
+    "title": "Cúmulos de Novembro",
+    "description": "Nuvens cúmulo-nimbos formando torres no céu azul.",
+    "src": "/gallery/cumulos-novembro.jpeg",
+    "date": "2024-11-29"
+  },
+  {
+    "id": "ceu-9",
+    "title": "Horizonte Aberto",
+    "description": "Pôr do sol sobre o campo, primeiro dia de verão.",
+    "src": "/gallery/horizonte-aberto.jpeg",
+    "date": "2024-12-01"
+  },
+  {
+    "id": "sjp-1",
+    "title": "Jardim Tropical",
+    "description": "Grama verde e palmeiras à beira d'água.",
+    "src": "/gallery/jardim-tropical.jpeg",
+    "date": "2024-12-13"
+  },
+  {
+    "id": "arquivo-1",
+    "title": "Lua na Estrada",
+    "description": "Lua cheia surgindo entre nuvens sobre o tráfego noturno.",
+    "src": "/gallery/lua-na-estrada.jpg",
+    "date": "2025-04-11"
+  },
+  {
+    "id": "arquivo-2",
+    "title": "Lua sobre a Cidade",
+    "description": "Lua cheia iluminando a cidade à noite.",
+    "src": "/gallery/lua-cidade.jpg",
+    "date": "2024-01-01"
+  },
+  {
+    "id": "arquivo-3",
+    "title": "Céu Violeta",
+    "description": "Entardecer em tons de roxo e azul.",
+    "src": "/gallery/ceu-violeta.jpg",
+    "date": "2024-01-01"
+  },
+  {
+    "id": "arquivo-4",
+    "title": "Mal Feito 1",
+    "description": "Quarto iluminado com néons vermelho e azul.",
+    "src": "/gallery/mal-feito-1.jpg",
+    "date": "2024-01-01"
+  },
+  {
+    "id": "arquivo-5",
+    "title": "Pinheiros ao Pôr do Sol",
+    "description": "Silhueta de pinheiros contra o céu laranjado.",
+    "src": "/gallery/pinheiros-por-do-sol.jpg",
+    "date": "2024-01-01"
+  },
+  {
+    "id": "arquivo-6",
+    "title": "Cidade à Noite",
+    "description": "Luzes da cidade na escuridão.",
+    "src": "/gallery/cidade-noite.jpg",
+    "date": "2024-01-01"
+  },
+  {
+    "id": "arquivo-7",
+    "title": "Violão na Árvore",
+    "description": "Pessoa sentada em galho com violão à noite.",
+    "src": "/gallery/violao-na-arvore.jpg",
+    "date": "2024-01-01"
+  },
+  {
+    "id": "arquivo-8",
+    "title": "Tempestade ao Entardecer",
+    "description": "Nuvens carregadas sobre a silhueta das árvores.",
+    "src": "/gallery/tempestade-entardecer.jpg",
+    "date": "2024-01-01"
+  },
+  {
+    "id": "arquivo-9",
+    "title": "Horta",
+    "description": "Abóboras no quintal.",
+    "src": "/gallery/horta.jpg",
+    "date": "2024-01-01"
+  },
+  {
+    "id": "arquivo-10",
+    "title": "Mal Feito 2",
+    "description": "Néons e arte na parede.",
+    "src": "/gallery/mal-feito-2.jpg",
+    "date": "2024-01-01"
   }
 ]
