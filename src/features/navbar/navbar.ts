@@ -115,7 +115,6 @@ export function initNavbar(): () => void {
 
   links.forEach((link) => {
     const linkEnter = () => {
-      // Individual link hover effects (scale, color, etc.)
       gsap.to(link, {
         y: -2,
         scale: 1.05,
@@ -163,6 +162,79 @@ export function initNavbar(): () => void {
     handlerMap.set(link, { linkEnter, linkLeave });
   });
 
+  // ── Mobile menu ────────────────────────────────────────────────────────────
+  const toggle = document.getElementById("mobile-menu-toggle");
+  const overlay = document.getElementById("mobile-overlay");
+  const bars = toggle?.querySelectorAll<HTMLElement>(".menu-bar");
+  const mobileLinks = overlay?.querySelectorAll<HTMLAnchorElement>(".mobile-nav-link");
+  let menuOpen = false;
+
+  // Highlight active link in overlay
+  if (overlay) {
+    const activeMobileLink = Array.from(
+      overlay.querySelectorAll<HTMLAnchorElement>(".mobile-nav-link")
+    ).find(link => {
+      const href = link.getAttribute("href");
+      if (href === "/" && window.location.pathname === "/") return true;
+      return href !== "/" && window.location.pathname.startsWith(href || "");
+    });
+    if (activeMobileLink) {
+      activeMobileLink.style.color = "#1ea7b6";
+    }
+  }
+
+  const openMenu = () => {
+    menuOpen = true;
+    document.body.style.overflow = "hidden";
+
+    if (bars) {
+      gsap.to(bars[0], { rotate: 45, y: 8, duration: 0.3, ease: "power2.out" });
+      gsap.to(bars[1], { opacity: 0, duration: 0.15 });
+      gsap.to(bars[2], { rotate: -45, y: -8, duration: 0.3, ease: "power2.out" });
+    }
+
+    if (overlay) {
+      gsap.to(overlay, {
+        opacity: 1,
+        duration: 0.3,
+        ease: "power2.out",
+        onStart: () => { overlay.style.pointerEvents = "auto"; },
+      });
+    }
+
+    if (mobileLinks) {
+      gsap.fromTo(
+        mobileLinks,
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: 0.07, delay: 0.1 }
+      );
+    }
+  };
+
+  const closeMenu = () => {
+    menuOpen = false;
+    document.body.style.overflow = "";
+
+    if (bars) {
+      gsap.to(bars[0], { rotate: 0, y: 0, duration: 0.3, ease: "power2.out" });
+      gsap.to(bars[1], { opacity: 1, duration: 0.2, delay: 0.1 });
+      gsap.to(bars[2], { rotate: 0, y: 0, duration: 0.3, ease: "power2.out" });
+    }
+
+    if (overlay) {
+      gsap.to(overlay, {
+        opacity: 0,
+        duration: 0.25,
+        ease: "power2.in",
+        onComplete: () => { overlay.style.pointerEvents = "none"; },
+      });
+    }
+  };
+
+  const onToggleClick = () => (menuOpen ? closeMenu() : openMenu());
+  toggle?.addEventListener("click", onToggleClick);
+  mobileLinks?.forEach(link => link.addEventListener("click", closeMenu));
+
   return () => {
     ScrollTrigger.getAll().forEach((st) => st.kill());
     container.removeEventListener("mouseenter", onNavbarEnter);
@@ -175,6 +247,8 @@ export function initNavbar(): () => void {
         link.removeEventListener("mouseleave", handlers.linkLeave);
       }
     });
+
+    closeMenu();
+    toggle?.removeEventListener("click", onToggleClick);
   };
 }
-

@@ -6,7 +6,9 @@
     <a href="/" class="navbar-link group flex items-center gap-2 text-sm font-bold tracking-[0.3em] uppercase transition-all px-4 py-1.5 rounded-full border border-transparent">
       Alexandre Tortoza
     </a>
-    <div id="navbar-links" class="flex items-center gap-3 text-[10px] tracking-widest uppercase sm:gap-5 sm:text-xs">
+
+    <!-- Desktop links -->
+    <div id="navbar-links" class="hidden items-center gap-3 text-[10px] tracking-widest uppercase sm:flex sm:gap-5 sm:text-xs">
       <a href="/" class="navbar-link relative px-4 py-1.5 rounded-full border border-transparent transition-all">
         Início
         <span class="navbar-line absolute -bottom-1 left-1/2 h-px w-0 -translate-x-1/2 bg-mesh-1 transition-all" />
@@ -24,8 +26,34 @@
         <span class="navbar-line absolute -bottom-1 left-1/2 h-px w-0 -translate-x-1/2 bg-mesh-1 transition-all" />
       </a>
     </div>
+
+    <!-- Mobile hamburger button -->
+    <button
+      id="mobile-menu-toggle"
+      type="button"
+      class="flex flex-col justify-center gap-1.5 p-2 sm:hidden"
+      aria-label="Menu"
+    >
+      <span class="menu-bar block h-0.5 w-6 origin-center bg-white/80"></span>
+      <span class="menu-bar block h-0.5 w-6 bg-white/80"></span>
+      <span class="menu-bar block h-0.5 w-6 origin-center bg-white/80"></span>
+    </button>
   </nav>
 </header>
+
+<!-- Mobile fullscreen overlay -->
+<div
+  id="mobile-overlay"
+  class="fixed inset-0 z-40 flex flex-col items-center justify-center sm:hidden"
+  style="opacity: 0; pointer-events: none; background: rgba(0,0,0,0.92); backdrop-filter: blur(20px);"
+>
+  <nav class="flex flex-col items-center gap-10">
+    <a href="/" class="mobile-nav-link text-3xl tracking-widest text-white/70 uppercase transition-colors hover:text-mesh-1">Início</a>
+    <a href="/projects" class="mobile-nav-link text-3xl tracking-widest text-white/70 uppercase transition-colors hover:text-mesh-1">Projetos</a>
+    <a href="/blog" class="mobile-nav-link text-3xl tracking-widest text-white/70 uppercase transition-colors hover:text-mesh-1">Blog</a>
+    <a href="/photos" class="mobile-nav-link text-3xl tracking-widest text-white/70 uppercase transition-colors hover:text-mesh-1">Fotos</a>
+  </nav>
+</div>
 
 <script>
   import { initNavbar } from "./navbar.ts";

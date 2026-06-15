@@ -59,8 +59,8 @@ if (!isIndex) {
 
 Implementamos um sistema de troca dinâmica de estilos de vidro:
 
-1.  **Estado Ativo**: Por padrão, apenas o link da página atual possui um fundo pílula com `backdrop-blur`.
-2.  **Hover Interaction**: Ao entrar na área da Navbar, usamos GSAP para:
+1. **Estado Ativo**: Por padrão, apenas o link da página atual possui um fundo pílula com `backdrop-blur`.
+2. **Hover Interaction**: Ao entrar na área da Navbar, usamos GSAP para:
     - Remover o fundo do item ativo.
     - Ativar o blur e fundo translúcido em todo o container da Navbar.
     - Isso cria uma experiência de "foco" quando o usuário interage com o menu.
@@ -81,6 +81,7 @@ src/
 ```
 
 ### Por que FSD?
+
 - **Isolamento**: Se eu quiser trocar o efeito `Stardust` por outro, eu apenas mexo em uma pasta.
 - **Acoplamento Baixo**: As features não dependem umas das outras. A `Navbar` não sabe que o `Stardust` existe.
 - **Escalabilidade**: Adicionar uma nova seção (ex: Galeria) é apenas criar um novo slice na camada de `features`.
@@ -107,4 +108,4 @@ Essa abordagem nos permitiu ajustar o layout do **Hero** especificamente para mo
 
 Este portfolio não é apenas uma vitrine, mas um laboratório de experimentos em **Motion Design** e **Frontend Engineering**. O uso de ferramentas como Astro e GSAP nos permite entregar uma experiência visual rica sem sacrificar a performance (Lighthouse scores próximos de 100).
 
-O código-fonte completo está disponível em [github.com/alexmrtr](https://github.com/alexmrtr).
+O código-fonte completo está disponível em [github.com/alexandre-tortoza/alexmrtr](https://github.com/Alexandre-Tortoza/alexmrtr).
