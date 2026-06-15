@@ -1,4 +1,47 @@
 ---
+const categories = [
+  {
+    label: "Languages",
+    skills: [
+      { icon: "devicon-typescript-plain colored", label: "TypeScript" },
+      { icon: "devicon-javascript-plain colored", label: "JavaScript" },
+      { icon: "devicon-python-plain colored", label: "Python" },
+      { icon: "devicon-rust-original colored", label: "Rust" },
+      { icon: "devicon-php-plain colored", label: "PHP" },
+      { icon: "devicon-css3-plain colored", label: "CSS" },
+      { icon: "devicon-sass-original colored", label: "Sass" },
+    ],
+  },
+  {
+    label: "Frameworks & Libs",
+    skills: [
+      { icon: "devicon-vuejs-plain colored", label: "Vue.js" },
+      { icon: "devicon-nuxtjs-plain colored", label: "Nuxt" },
+      { icon: "devicon-tailwindcss-original colored", label: "TailwindCSS" },
+      { icon: "devicon-laravel-plain colored", label: "Laravel" },
+      { icon: "devicon-scikitlearn-plain colored", label: "Scikit-learn" },
+    ],
+  },
+  {
+    label: "Databases",
+    skills: [
+      { icon: "devicon-mysql-original colored", label: "MySQL" },
+      { icon: "devicon-mongodb-plain colored", label: "MongoDB" },
+      { icon: "devicon-sqlite-plain colored", label: "SQLite" },
+    ],
+  },
+  {
+    label: "Tools & Env",
+    skills: [
+      { icon: "devicon-git-plain colored", label: "Git" },
+      { icon: "devicon-github-original colored", label: "GitHub" },
+      { icon: "devicon-docker-plain colored", label: "Docker" },
+      { icon: "devicon-linux-plain colored", label: "Linux" },
+      { icon: "devicon-archlinux-plain colored", label: "Arch Linux" },
+      { icon: "devicon-neovim-plain colored", label: "Neovim" },
+    ],
+  },
+];
 ---
 
 <section id="skills" class="w-full py-24 2xl:py-40">
@@ -27,69 +70,37 @@
     <!-- Terminal Body -->
     <div id="terminal-body" class="overflow-hidden" style="height: 0;">
       <div id="terminal-inner" class="p-6 font-mono text-xs leading-relaxed text-left sm:p-10 sm:text-sm lg:text-base">
-        <!-- Languages -->
-        <div class="category mb-4" data-open="false">
-          <button
-            type="button"
-            class="category-toggle flex w-full cursor-pointer items-center justify-start gap-2 text-mesh-1 transition-colors hover:text-white"
-          >
-            <span class="arrow inline-block text-[10px] transition-transform duration-300">▶</span>
-            <span class="font-bold">Languages</span>
-            <span class="text-white/40">&gt;</span>
-          </button>
-          <div class="category-content overflow-hidden" style="height: 0;">
-            <div class="flex flex-wrap justify-start gap-x-4 gap-y-2 pb-4 pt-2">
-              {["TypeScript", "JavaScript", "HTML5", "CSS3", "Node.js"].map(skill => (
-                <span class="cursor-default text-white/60 transition-colors hover:text-white">{skill}</span>
-              ))}
+        {categories.map((cat) => (
+          <div class="category mb-4" data-open="false">
+            <button
+              type="button"
+              class="category-toggle flex w-full cursor-pointer items-center justify-start gap-2 text-mesh-1 transition-colors hover:text-white"
+            >
+              <span class="arrow inline-block text-[10px] transition-transform duration-300">▶</span>
+              <div>
+                <span class="font-bold">{cat.label}</span>
+                <span class="text-white/40">:</span>
+              </div>
+            </button>
+            <div class="category-content overflow-hidden" style="height: 0;">
+              <div class="flex flex-wrap justify-start gap-3 pb-4 pt-3">
+                {cat.skills.map((skill) => (
+                  <div class="group flex h-24 w-24 cursor-default flex-col items-center justify-center gap-2 rounded-md bg-white/5 backdrop-blur-sm transition-colors hover:bg-white/10">
+                    <i class={`${skill.icon} text-4xl opacity-70 transition-opacity group-hover:opacity-100`}></i>
+                    <span class="text-[10px] text-white/40 transition-colors group-hover:text-white/70">{skill.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- Frameworks -->
-        <div class="category mb-4" data-open="false">
-          <button
-            type="button"
-            class="category-toggle flex w-full cursor-pointer items-center justify-start gap-2 text-mesh-1 transition-colors hover:text-white"
-          >
-            <span class="arrow inline-block text-[10px] transition-transform duration-300">▶</span>
-            <span class="font-bold">Frameworks & Libs</span>
-            <span class="text-white/40">&gt;</span>
-          </button>
-          <div class="category-content overflow-hidden" style="height: 0;">
-            <div class="flex flex-wrap justify-start gap-x-4 gap-y-2 pb-4 pt-2">
-              {["Astro", "React", "GSAP", "Three.js", "TailwindCSS", "Next.js"].map(skill => (
-                <span class="cursor-default text-white/60 transition-colors hover:text-white">{skill}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <!-- Tools -->
-        <div class="category mb-4" data-open="false">
-          <button
-            type="button"
-            class="category-toggle flex w-full cursor-pointer items-center justify-start gap-2 text-mesh-1 transition-colors hover:text-white"
-          >
-            <span class="arrow inline-block text-[10px] transition-transform duration-300">▶</span>
-            <span class="font-bold">Tools & Env</span>
-            <span class="text-white/40">&gt;</span>
-          </button>
-          <div class="category-content overflow-hidden" style="height: 0;">
-            <div class="flex flex-wrap justify-start gap-x-4 gap-y-2 pb-4 pt-2">
-              {["Git", "Vite", "PNPM", "VS Code", "Linux", "Figma"].map(skill => (
-                <span class="cursor-default text-white/60 transition-colors hover:text-white">{skill}</span>
-              ))}
-            </div>
-          </div>
-        </div>
+        ))}
 
         <!-- Final Prompt -->
         <div
           id="final-prompt"
           class="mt-8 border-t border-white/5 pt-4 text-white/40"
         >
-          <span class="text-green-500/70">eriophorum@alexmrtr</span>
+          <span class="text-green-500/70">arch@alexmrtr</span>
           <span class="text-mesh-1">~</span>
           <span class="text-white/40">/skills</span>
           <span class="ml-1 inline-block h-5 w-2 animate-blink bg-mesh-1 align-middle"></span>

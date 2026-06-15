@@ -44,6 +44,61 @@ const { photos } = Astro.props;
     content-visibility: auto;
     contain: layout style paint;
   }
+  @keyframes vcard-shake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-1px) rotate(-0.3deg); }
+    50% { transform: translateX(1.5px) rotate(0.2deg); }
+    75% { transform: translateX(-1px) rotate(-0.2deg); }
+  }
+  .vcard-shaking {
+    animation: vcard-shake 0.5s ease-in-out;
+    transform-origin: center center;
+  }
+  .vcard-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+    cursor: zoom-out;
+  }
+  .vcard-modal.open {
+    opacity: 1;
+  }
+  .vcard-modal-inner {
+    position: relative;
+    max-height: 85vh;
+    max-width: 90vw;
+    cursor: default;
+  }
+  .vcard-modal-inner img {
+    max-height: 85vh;
+    max-width: 90vw;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+  .vcard-modal-close {
+    position: absolute;
+    top: -36px;
+    right: 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 4px 8px;
+  }
+  .vcard-modal-close:hover {
+    color: rgba(255, 255, 255, 0.9);
+  }
 </style>
 
 <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -62,6 +117,7 @@ const { photos } = Astro.props;
         alt={photo.title}
         src={photo.src}
         loading="lazy"
+        decoding="async"
       />
       <div
         class="absolute inset-0 z-30 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -84,6 +140,54 @@ const { photos } = Astro.props;
 
   const cards = document.querySelectorAll(".photo-wrapper");
 
+  function openModal(src, alt) {
+    const existing = document.querySelector(".vcard-modal");
+    if (existing) existing.remove();
+
+    const modal = document.createElement("div");
+    modal.className = "vcard-modal";
+
+    modal.innerHTML =
+      '<div class="vcard-modal-inner">' +
+      '<button class="vcard-modal-close">Fechar</button>' +
+      '<img src="' + src + '" alt="' + alt + '" />' +
+      "</div>";
+
+    document.body.appendChild(modal);
+
+    requestAnimationFrame(function () {
+      modal.classList.add("open");
+    });
+
+    function close() {
+      modal.classList.remove("open");
+      modal.addEventListener("transitionend", function () { modal.remove(); }, { once: true });
+    }
+
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) close();
+    });
+
+    modal.querySelector(".vcard-modal-close").addEventListener("click", function (e) {
+      e.stopPropagation();
+      close();
+    });
+
+    function onKey(e) {
+      if (e.key === "Escape") {
+        close();
+        document.removeEventListener("keydown", onKey);
+      }
+    }
+    document.addEventListener("keydown", onKey);
+  }
+
+  function addModalListener(card) {
+    const _src = card.dataset.src;
+    const _alt = card.querySelector(".photo-img").alt;
+    card.addEventListener("click", function () { openModal(_src, _alt); });
+  }
+
   const initCard = (card) => {
     if (card.dataset.initialized === "true") return;
     card.dataset.initialized = "true";
@@ -97,17 +201,26 @@ const { photos } = Astro.props;
 
     let cleanupAscii = null;
 
-    const unlock = () => {
+    const unlock = function () {
       localStorage.setItem("photo-unlocked-" + id, "true");
+
+      card.classList.add("vcard-shaking");
 
       gsap.to(canvas, {
         opacity: 0,
         duration: 0.8,
         ease: "power2.inOut",
-        onComplete: () => { if (cleanupAscii) cleanupAscii(); },
+        onComplete: function () {
+          card.classList.remove("vcard-shaking");
+          if (cleanupAscii) cleanupAscii();
+        },
       });
       gsap.to(shine, { opacity: 0, duration: 0.8, ease: "power2.inOut" });
       gsap.to(img, { opacity: 1, duration: 0.8, ease: "power2.inOut" });
+
+      setTimeout(function () {
+        addModalListener(card);
+      }, 800);
     };
 
     const isUnlocked = localStorage.getItem("photo-unlocked-" + id) === "true";
@@ -117,6 +230,7 @@ const { photos } = Astro.props;
       gsap.set(canvas, { opacity: 0, visibility: "hidden" });
       gsap.set(shine, { opacity: 0 });
       gsap.set(img, { opacity: 1 });
+      addModalListener(card);
       return;
     }
 
@@ -127,11 +241,11 @@ const { photos } = Astro.props;
       brightness: 0,
       contrast: 0,
     })
-      .then((cleanup) => {
+      .then(function (cleanup) {
         cleanupAscii = cleanup;
-        gsap.to(skeleton, { opacity: 0, duration: 0.3, onComplete: () => skeleton.remove() });
+        gsap.to(skeleton, { opacity: 0, duration: 0.3, onComplete: function () { skeleton.remove(); } });
       })
-      .catch(() => { skeleton.remove(); });
+      .catch(function () { skeleton.remove(); });
 
     card.addEventListener(
       "click",
@@ -145,7 +259,7 @@ const { photos } = Astro.props;
   };
 
   const observer = new IntersectionObserver(
-    (entries) => {
+    function (entries) {
       for (const entry of entries) {
         if (entry.isIntersecting) {
           initCard(entry.target);

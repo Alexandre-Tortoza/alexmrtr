@@ -2,7 +2,6 @@
 import BaseLayout from "../../app/layouts/BaseLayout.astro";
 import PostCard from "../../features/blog/ui/PostCard.astro";
 import { getPosts } from "../../features/blog/api/posts.ts";
-import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg";
 
 const posts = await getPosts();
 ---
@@ -12,7 +11,7 @@ const posts = await getPosts();
   description="Pensamentos sobre tecnologia, desenvolvimento e experimentos."
 >
   <div class="page-hero relative mt-20 h-[55vh] w-full overflow-hidden rounded-sm border border-white/10">
-    <img src={penguinsImage.src} alt="Blog" class="h-full w-full object-cover" />
+    <img src="/gallery/pinheiros-por-do-sol.jpg" alt="Blog" class="h-full w-full object-cover" />
     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
     <div class="absolute bottom-0 left-0 p-6 lg:p-10">
       <p class="text-[10px] tracking-[0.25em] uppercase text-mesh-1 mb-1">Blog</p>

@@ -1,12 +1,5 @@
 [
   {
-    "id": "retrato-1",
-    "title": "Lago ao Entardecer 1",
-    "description": "Pôr do sol sobre o lago, cidade refletida na água.",
-    "src": "/gallery/lago-entardecer-1.jpeg",
-    "date": "2024-01-14"
-  },
-  {
     "id": "retrato-2",
     "title": "Lago ao Entardecer 2",
     "description": "Roda-gigante iluminada no fim do dia.",
@@ -21,20 +14,6 @@
     "date": "2024-01-15"
   },
   {
-    "id": "curitiba-2",
-    "title": "Pôr do Sol 2",
-    "description": "Céu em chamas, árvores e lago ao fundo.",
-    "src": "/gallery/por-do-sol-2.jpeg",
-    "date": "2024-01-15"
-  },
-  {
-    "id": "curitiba-3",
-    "title": "Pôr do Sol 3",
-    "description": "Silhueta de eucaliptos contra o céu colorido.",
-    "src": "/gallery/por-do-sol-3.jpeg",
-    "date": "2024-01-15"
-  },
-  {
     "id": "ceu-1",
     "title": "Campo ao Entardecer",
     "description": "Pôr do sol sobre o campo aberto, margem do lago ao fundo.",
@@ -45,7 +24,7 @@
     "id": "ceu-2",
     "title": "Céu de Inverno 1",
     "description": "Manhã de junho.",
-    "src": "/gallery/ceu-inverno-1.heic",
+    "src": "/gallery/ceu-inverno-1.jpeg",
     "date": "2024-06-15"
   },
   {
@@ -56,31 +35,24 @@
     "date": "2024-06-15"
   },
   {
-    "id": "ceu-4",
-    "title": "Céu de Inverno 2",
-    "description": "Meio-dia de inverno.",
-    "src": "/gallery/ceu-inverno-2.heic",
-    "date": "2024-06-15"
-  },
-  {
     "id": "ceu-5",
     "title": "Céu de Inverno 3",
     "description": "Tarde azul de junho.",
-    "src": "/gallery/ceu-inverno-3.heic",
+    "src": "/gallery/ceu-inverno-3.jpeg",
     "date": "2024-06-16"
   },
   {
     "id": "ceu-6",
     "title": "Céu de Inverno 4",
     "description": "Fim de tarde de inverno.",
-    "src": "/gallery/ceu-inverno-4.heic",
+    "src": "/gallery/ceu-inverno-4.jpeg",
     "date": "2024-06-16"
   },
   {
     "id": "ceu-7",
     "title": "Céu de Inverno 5",
     "description": "Pôr do sol de junho.",
-    "src": "/gallery/ceu-inverno-5.heic",
+    "src": "/gallery/ceu-inverno-5.jpeg",
     "date": "2024-06-16"
   },
   {
@@ -88,13 +60,6 @@
     "title": "Praia com Falésia",
     "description": "Sol forte, mar cintilante e promontório em Florianópolis.",
     "src": "/gallery/praia-falesia-1.jpeg",
-    "date": "2024-11-16"
-  },
-  {
-    "id": "praia-2",
-    "title": "Praia com Sol",
-    "description": "Reflexo do sol nas águas em Florianópolis.",
-    "src": "/gallery/praia-sol.jpeg",
     "date": "2024-11-16"
   },
   {
@@ -119,32 +84,11 @@
     "date": "2024-11-17"
   },
   {
-    "id": "ceu-8",
-    "title": "Cúmulos de Novembro",
-    "description": "Nuvens cúmulo-nimbos formando torres no céu azul.",
-    "src": "/gallery/cumulos-novembro.jpeg",
-    "date": "2024-11-29"
-  },
-  {
     "id": "ceu-9",
     "title": "Horizonte Aberto",
     "description": "Pôr do sol sobre o campo, primeiro dia de verão.",
     "src": "/gallery/horizonte-aberto.jpeg",
     "date": "2024-12-01"
-  },
-  {
-    "id": "sjp-1",
-    "title": "Jardim Tropical",
-    "description": "Grama verde e palmeiras à beira d'água.",
-    "src": "/gallery/jardim-tropical.jpeg",
-    "date": "2024-12-13"
-  },
-  {
-    "id": "arquivo-1",
-    "title": "Lua na Estrada",
-    "description": "Lua cheia surgindo entre nuvens sobre o tráfego noturno.",
-    "src": "/gallery/lua-na-estrada.jpg",
-    "date": "2025-04-11"
   },
   {
     "id": "arquivo-2",
@@ -158,13 +102,6 @@
     "title": "Céu Violeta",
     "description": "Entardecer em tons de roxo e azul.",
     "src": "/gallery/ceu-violeta.jpg",
-    "date": "2024-01-01"
-  },
-  {
-    "id": "arquivo-4",
-    "title": "Mal Feito 1",
-    "description": "Quarto iluminado com néons vermelho e azul.",
-    "src": "/gallery/mal-feito-1.jpg",
     "date": "2024-01-01"
   },
   {

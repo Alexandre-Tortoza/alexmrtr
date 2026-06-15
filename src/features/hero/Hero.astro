@@ -1,7 +1,6 @@
 ---
 import AsciiArt from "../ascii-art/AsciiArt.astro";
 import Container from "../container/Container.astro";
-import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg";
 ---
 
 <section class="grid min-h-screen w-full grid-cols-1 items-center gap-14 py-24 md:grid-cols-2 md:gap-10 3xl:gap-16 4xl:gap-32 4xl:py-32">
@@ -23,16 +22,21 @@ import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg"
 
   <div id="hero-card" class="hero-card-3d mx-auto md:mx-0 md:justify-self-center 4xl:justify-self-end">
     <Container class="max-w-md">
-      <div class="h-full w-full overflow-hidden p-3">
+      <div class="relative h-full w-full overflow-hidden p-3">
         <AsciiArt
-          src={penguinsImage.src}
+          src="/me.jpg"
           width="100%"
           height="100%"
           class="h-full w-full rounded-[2px]"
-          fontSize={24}
+          fontSize={20}
           artStyle="classic"
           colorMode="fullcolor"
           ditherStrength={0}
+        />
+        <img
+          src="/me.jpg"
+          alt=""
+          class="hero-card-real-img absolute inset-0 h-full w-full object-cover rounded-[2px] opacity-0 pointer-events-none transition-opacity duration-700"
         />
       </div>
     </Container>
@@ -109,6 +113,10 @@ import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg"
       0 0 38px rgb(30 167 182 / 0.08);
   }
 
+  .hero-card-3d:hover .hero-card-real-img {
+    opacity: 0.22;
+  }
+
   @keyframes card-float {
     0%,
     100% {
@@ -157,8 +165,7 @@ import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg"
       tiltX: 0,
       tiltY: 0,
     };
-    const ease = 0.09;
-    let isHovering = false;
+    const ease = 0.045;
 
     const resetCard = () => {
       target.pullX = 0;
@@ -181,26 +188,15 @@ import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg"
       requestAnimationFrame(animateCard);
     };
 
-    card.addEventListener("pointerenter", () => {
-      isHovering = true;
-    });
-
-    card.addEventListener("pointerleave", () => {
-      isHovering = false;
-      resetCard();
-    });
-
-    card.addEventListener("pointermove", (event) => {
-      if (!isHovering) return;
-
+    window.addEventListener("pointermove", (event) => {
       const rect = card.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const deltaX = event.clientX - centerX;
       const deltaY = event.clientY - centerY;
-      const range = Math.min(rect.width, rect.height) * 1.2;
-
       const distance = Math.hypot(deltaX, deltaY);
+      const range = 720;
+
       if (distance > range) {
         resetCard();
         return;
@@ -210,12 +206,13 @@ import penguinsImage from "../../assets/hubert-neufeld-j-udI4zim2E-unsplash.jpg"
       const nx = Math.max(-1, Math.min(1, deltaX / range));
       const ny = Math.max(-1, Math.min(1, deltaY / range));
 
-      target.tiltX = ny * -16;
-      target.tiltY = nx * 20;
-      target.pullX = nx * influence * 32;
-      target.pullY = ny * influence * 32;
+      target.tiltX = ny * -18;
+      target.tiltY = nx * 22;
+      target.pullX = nx * influence * 42;
+      target.pullY = ny * influence * 42;
     });
 
+    document.addEventListener("mouseleave", resetCard);
     animateCard();
   }
 
